@@ -3,34 +3,51 @@
 # ask the user for an operation to perform
 # perform the operation on the two numbers
 # output the result
+require 'yaml'
+MESSAGES = YAML.load_file('calculator_messages.yml')
+LANGUAGE = 'en'
+
+def messages(message, lang='en')
+  MESSAGES[lang][message]
+end
 
 def prompt(message)
   puts "=> #{message}"
 end
 
-def valid_number?(number)
-  number.to_i != 0
+def number?(input)
+  integer?(input) || float?(input)
+end
+
+def integer?(input)
+  /^\d+$/.match(input)
+end
+
+def float?(input)
+  /\d/.match(input) && /^\d*\.?\d*$/.match(input)
 end
 
 def operation_to_message(operator)
-  case operator
-  when "1"
-    "Adding"
-  when "2"
-    "Subtracting"
-  when "3"
-    "Multiplying"
-  when "4"
-    "Dividing"
-  end
+  word = case operator
+          when "1"
+            "Adding"
+          when "2"
+            "Subtracting"
+          when "3"
+            "Multiplying"
+          when "4"
+            "Dividing"
+          end
+
+  word
 end
 
-prompt("Welcome to calculator! Enter your name: ")
+prompt(messages('welcome', LANGUAGE))
 name = nil
 loop do
   name = gets.chomp
   if name.empty?
-    puts "Please enter a valid name"
+    puts messages('invalid_name')
   else
     break
   end
@@ -40,25 +57,25 @@ prompt("Hi #{name}!")
 loop do
   number1 = nil
   loop do
-    prompt("What's the first number?")
+    prompt(messages('first_ask'))
     number1 = gets.chomp
 
-    if valid_number?(number1)
+    if number?(number1)
       break
     else
-      prompt("Invalid number. ")
+      prompt(messages('invalid_num'))
     end
   end
 
   number2 = nil
   loop do
-    prompt("What's the second number?")
+    prompt(messages('second_ask'))
     number2 = gets.chomp
 
-    if valid_number?(number2)
+    if number?(number2)
       break
     else
-      prompt("Invalid number. ")
+      prompt(messages('invalid_num'))
     end
   end
 
@@ -76,25 +93,27 @@ loop do
     if %w(1 2 3 4).include?(operator)
       break
     else
-      prompt("Must choose 1, 2, 3 or 4")
+      prompt(messages('invalid_operation'))
     end
   end
   prompt("#{operation_to_message(operator)} the two numbers...")
 
   result = case operator
            when "1"
-             number1.to_i + number2.to_i
+             number1.to_f + number2.to_f
            when "2"
-             number1.to_i - number2.to_i
+             number1.to_f - number2.to_f
            when "3"
-             number1.to_i * number2.to_i
+             number1.to_f * number2.to_f
            else
-             number1.to_f / number2.to_i
+             number1.to_f / number2.to_f
            end
 
   prompt("The result is #{result}")
 
-  prompt("Would you like to calculate another number? (Y to continue): ")
+  prompt(messages('again'))
   continue = gets.chomp.downcase
-  break if (continue != 'y') || (continue != 'yes')
+  break if continue != 'y'
+    
+  
 end
