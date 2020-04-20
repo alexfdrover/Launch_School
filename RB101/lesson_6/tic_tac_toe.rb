@@ -63,6 +63,14 @@ def computer_places_piece!(brd)
   brd[square] = COMPUTER_MARKER
 end
 
+def place_piece!(brd, who_turn)
+  if who_turn == 'player'
+    player_places_piece!(brd)
+  elsif who_turn == 'computer'
+    computer_places_piece!(brd)
+  end
+end
+
 def determine_danger_square(brd)
   WINNING_LINES.each do |line|
     index = 0
@@ -108,65 +116,35 @@ def someone_won?(brd)
   !!detect_winner(brd)
 end
 
-def joinor(arr, delim = ', ', word = 'or')
-  if arr.size == 1
-    arr[0]
+def joinor(arr, delimiter=', ', word='or')
+  case arr.size
+  when 0 then ''
+  when 1 then arr.first
+  when 2 then arr.join(" #{word} ")
   else
-  arr[-1] = "#{word} #{arr[-1]}"
-  arr.join(delim)
+    arr[-1] = "#{word} #{arr.last}"
+    arr.join(delimiter)
   end
+end
+
+def alternate_player(current_player)
+  current_player == 'player' ? 'computer' : 'player'
 end
 
 player_wins = 0
 computer_wins = 0
 
 loop do # multiple game loop
-  puts "Who moves first? (Player or Computer): "
-  choice = gets.downcase.chomp
+  prompt "Who moves first? (Player or Computer): "
+  current_player = gets.downcase.chomp
 
   board = initialize_board
 
   loop do # main game loop
     display_board(board)
-
-    if choice == 'computer'
-      computer_places_piece!(board)
-      if someone_won?(board)
-        computer_wins += 1
-        break
-      elsif board_full?(board)
-        break
-      end
-
-      display_board(board)
-
-      player_places_piece!(board)
-      if someone_won?(board)
-        player_wins += 1
-        break
-      elsif board_full?(board)
-        break
-      end
-    end
-
-    if choice == 'player'
-
-      player_places_piece!(board)
-        if someone_won?(board)
-          player_wins += 1
-          break
-        elsif board_full?(board)
-          break
-        end
-
-      computer_places_piece!(board)
-      if someone_won?(board)
-        computer_wins += 1
-        break
-      elsif board_full?(board)
-        break
-      end
-    end
+    place_piece!(board, current_player)
+    break if someone_won?(board) || board_full?(board)
+    current_player = alternate_player(current_player)
   end
 
   display_board(board)
