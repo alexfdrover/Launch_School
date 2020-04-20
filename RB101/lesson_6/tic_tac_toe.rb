@@ -117,30 +117,55 @@ def joinor(arr, delim = ', ', word = 'or')
   end
 end
 
-
 player_wins = 0
 computer_wins = 0
 
-loop do
+loop do # multiple game loop
+  puts "Who moves first? (Player or Computer): "
+  choice = gets.downcase.chomp
+
   board = initialize_board
 
-  loop do
+  loop do # main game loop
     display_board(board)
 
-    player_places_piece!(board)
-    if someone_won?(board)
-      player_wins += 1
-      break
-    elsif board_full?(board)
-      break
+    if choice == 'computer'
+      computer_places_piece!(board)
+      if someone_won?(board)
+        computer_wins += 1
+        break
+      elsif board_full?(board)
+        break
+      end
+
+      display_board(board)
+
+      player_places_piece!(board)
+      if someone_won?(board)
+        player_wins += 1
+        break
+      elsif board_full?(board)
+        break
+      end
     end
 
-    computer_places_piece!(board)
-    if someone_won?(board)
-      computer_wins += 1
-      break
-    elsif board_full?(board)
-      break
+    if choice == 'player'
+
+      player_places_piece!(board)
+        if someone_won?(board)
+          player_wins += 1
+          break
+        elsif board_full?(board)
+          break
+        end
+
+      computer_places_piece!(board)
+      if someone_won?(board)
+        computer_wins += 1
+        break
+      elsif board_full?(board)
+        break
+      end
     end
   end
 
