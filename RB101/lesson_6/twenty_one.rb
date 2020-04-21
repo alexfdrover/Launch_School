@@ -64,7 +64,8 @@ end
 player_wins = 0
 dealer_wins = 0
 
-loop do
+loop do # repeat game loop
+  # initialize game state
   deck = initialize_deck
   player_hand = deal_first_cards(deck)
   dealer_hand = deal_first_cards(deck)
@@ -82,6 +83,7 @@ loop do
       if bust?(player_total)
         display_hand_details(player_hand, dealer_hand, player_total)
         puts "Bust! Dealer wins!"
+        dealer_wins += 1
         break
       end
     elsif answer == 'stay' # exits player loop, moves to dealer loop
@@ -97,18 +99,26 @@ loop do
       if bust?(dealer_total)
         display_hand_details(player_hand, dealer_hand, player_total)
         puts "Dealer has busted! Player wins!"
+        player_wins += 1
         break
       end
-  end
+    end
 
-  # card comparison to determine winner when dealer stays
+    # card comparison to determine winner when dealer stays
     if dealer_total <= MAX_CARD_LIMIT
       display_hand_details(player_hand, dealer_hand, player_total)
       puts "Dealer Staying -- Comparing Cards"
       determine_winner(player_total, dealer_total)
+      if player_total > dealer_total
+        player_wins += 1
+      elsif player_total < dealer_total
+        dealer_wins += 1
+      end
     end
   end
 
+  puts "Player score is: #{player_wins} ===> Dealer score is: #{dealer_wins}"
+  break if player_wins == 5 || dealer_wins == 5
   prompt "Play again? (y/n): "
   again_response = gets.downcase.chomp
   break if again_response != 'y'
