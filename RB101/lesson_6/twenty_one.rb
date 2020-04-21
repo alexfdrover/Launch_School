@@ -26,6 +26,9 @@ end
 def determine_total(hand)
   total = 0
   hand.each { |card| total += CARD_VALUES.values_at(card[1])[0] }
+  if hand.flatten.include?('ace') && total <= 11
+    total += 10
+  end
   total
 end
 
@@ -33,10 +36,25 @@ def bust?(hand)
   determine_total(hand) > 21
 end
 
-def display_hand_details(hand)
+def display_hand_details(hand, dealer_hand)
   system 'clear'
   puts "Your hand is #{hand}"
   puts "Your total hand value is #{determine_total(hand)}"
+  puts "Dealer's visible card is #{dealer_hand[0]}"
+end
+
+def determine_winner(player_hand, dealer_hand)
+  case 
+  when determine_total(player_hand) > determine_total(dealer_hand)
+    puts "Player's total is #{determine_total(player_hand)} -- Dealer's total is #{determine_total(dealer_hand)}"
+    puts "Player wins!"
+  when determine_total(player_hand) < determine_total(dealer_hand)
+    puts "Player's total is #{determine_total(player_hand)} -- Dealer's total is #{determine_total(dealer_hand)}"
+    puts "Dealer wins!"
+  when determine_total(player_hand) == determine_total(dealer_hand)
+    puts "Player's total is #{determine_total(player_hand)} -- Dealer's total is #{determine_total(dealer_hand)}"
+    puts "It's a tie!"
+  end
 end
 
 deck = initialize_deck
@@ -45,24 +63,24 @@ dealer_hand = deal_first_cards(deck)
 
 answer = ''
 loop do #player loop
-  display_hand_details(player_hand)
+  display_hand_details(player_hand, dealer_hand)
   prompt "Hit or Stay?: "
   answer = gets.downcase.chomp
 
   if answer == 'hit'
     player_hand << draw_card(deck)
     if bust?(player_hand)
-      display_hand_details(player_hand)
+      display_hand_details(player_hand, dealer_hand)
       puts "Bust! Dealer wins!"
       break
     end
-  elsif answer == 'stay'
+  elsif answer == 'stay' #exits player loop, moves to dealer loop
     break
   end
 end
 
-if answer == 'stay' #dealer hit loop
-  while determine_total(dealer_hand) < DEALER_STAY_LIMIT
+if answer == 'stay' #dealer's turn
+  while determine_total(dealer_hand) < DEALER_STAY_LIMIT #dealer hit loop
     dealer_hand << draw_card(deck)
     if bust?(dealer_hand)
       puts "Dealer has busted! Player wins!"
@@ -70,19 +88,10 @@ if answer == 'stay' #dealer hit loop
     end
   end
 
-  if determine_total(dealer_hand) <= MAX_CARD_LIMIT #card comparison
+  if determine_total(dealer_hand) <= MAX_CARD_LIMIT #card comparison to determine winner when dealer stays
     puts "Dealer Staying -- Comparing Cards"
-    if determine_total(player_hand) > determine_total(dealer_hand)
-      puts "Player's total is #{determine_total(player_hand)} -- Dealer's total is #{determine_total(dealer_hand)}"
-      puts "Player wins!"
-    elsif determine_total(player_hand) < determine_total(dealer_hand)
-      puts "Player's total is #{determine_total(player_hand)} -- Dealer's total is #{determine_total(dealer_hand)}"
-      puts "Dealer wins!"
-    else
-      puts "Player's total is #{determine_total(player_hand)} -- Dealer's total is #{determine_total(dealer_hand)}"
-      puts "It's a tie!"
-    end
+    determine_winner(player_hand, dealer_hand)
   end
 end
 
-#still need to adjust Ace values to be either 1 or 11 depending on the current hand
+#still need to review proposed solution by LS
