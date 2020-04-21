@@ -27,21 +27,22 @@ end
 def determine_total(hand)
   total = 0
   hand.each { |card| total += CARD_VALUES.values_at(card[1])[0] }
-  if hand.flatten.include?('ace') && total <= 11
+  # modifies calculated 'ace' value to be 11 if it wont exceed max hand value
+  if hand.flatten.include?('ace') && total <= (MAX_CARD_LIMIT - 10)
     total += 10
   end
   total
 end
 
 def bust?(total)
-  total > 21
+  total > MAX_CARD_LIMIT
 end
 
 def display_hand_details(hand, dealer_hand, player_total)
   system 'clear'
   puts "Your hand is #{hand}"
   puts "Your total hand value is #{player_total}"
-  puts "Dealer's visible card is #{dealer_hand[0]}"
+  puts "Dealer's cards are [?, ?], #{dealer_hand[1..(dealer_hand.size - 1)]}"
 end
 
 def determine_winner(player_total, dealer_total)
@@ -60,44 +61,55 @@ def determine_winner(player_total, dealer_total)
   end
 end
 
-deck = initialize_deck
-player_hand = deal_first_cards(deck)
-dealer_hand = deal_first_cards(deck)
-player_total = determine_total(player_hand)
+player_wins = 0
+dealer_wins = 0
 
-answer = ''
-loop do # player loop
-  display_hand_details(player_hand, dealer_hand, player_total)
-  prompt "Hit or Stay?: "
-  answer = gets.downcase.chomp
+loop do
+  deck = initialize_deck
+  player_hand = deal_first_cards(deck)
+  dealer_hand = deal_first_cards(deck)
+  player_total = determine_total(player_hand)
 
-  if answer == 'hit'
-    player_hand << draw_card(deck)
-    player_total = determine_total(player_hand)
-    if bust?(player_total)
-      display_hand_details(player_hand, dealer_hand, player_total)
-      puts "Bust! Dealer wins!"
+  answer = ''
+  loop do # player loop
+    display_hand_details(player_hand, dealer_hand, player_total)
+    prompt "Hit or Stay?: "
+    answer = gets.downcase.chomp
+
+    if answer == 'hit'
+      player_hand << draw_card(deck)
+      player_total = determine_total(player_hand)
+      if bust?(player_total)
+        display_hand_details(player_hand, dealer_hand, player_total)
+        puts "Bust! Dealer wins!"
+        break
+      end
+    elsif answer == 'stay' # exits player loop, moves to dealer loop
       break
     end
-  elsif answer == 'stay' # exits player loop, moves to dealer loop
-    break
   end
-end
 
-if answer == 'stay' # dealer's turn
-  dealer_total = determine_total(dealer_hand)
-  while dealer_total < DEALER_STAY_LIMIT # dealer hit loop
-    dealer_hand << draw_card(deck)
+  if answer == 'stay' # dealer's turn
     dealer_total = determine_total(dealer_hand)
-    if bust?(dealer_total)
-      puts "Dealer has busted! Player wins!"
-      break
-    end
+    while dealer_total < DEALER_STAY_LIMIT # dealer hit loop
+      dealer_hand << draw_card(deck)
+      dealer_total = determine_total(dealer_hand)
+      if bust?(dealer_total)
+        display_hand_details(player_hand, dealer_hand, player_total)
+        puts "Dealer has busted! Player wins!"
+        break
+      end
   end
 
   # card comparison to determine winner when dealer stays
-  if dealer_total <= MAX_CARD_LIMIT
-    puts "Dealer Staying -- Comparing Cards"
-    determine_winner(player_total, dealer_total)
+    if dealer_total <= MAX_CARD_LIMIT
+      display_hand_details(player_hand, dealer_hand, player_total)
+      puts "Dealer Staying -- Comparing Cards"
+      determine_winner(player_total, dealer_total)
+    end
   end
+
+  prompt "Play again? (y/n): "
+  again_response = gets.downcase.chomp
+  break if again_response != 'y'
 end
