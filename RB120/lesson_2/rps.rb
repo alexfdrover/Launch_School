@@ -1,3 +1,23 @@
+class Score
+  attr_accessor :human, :computer
+  WINS = 3
+
+  def initialize
+    @human = 0
+    @computer = 0
+  end
+
+  def increment(winner)
+    case winner
+    when 'human' then self.human += 1
+    when 'computer' then self.computer += 1
+    end
+  end
+
+  def max?
+    (self.human > WINS) || (self.computer > WINS)
+  end
+end
 
 class Move
   VALUES = ['rock', 'paper', 'scissors']
@@ -82,11 +102,12 @@ class Rule
 end
 
 class RPSGame
-  attr_accessor :human, :computer
+  attr_accessor :human, :computer, :score
 
   def initialize
     @human = Human.new
     @computer = Computer.new
+    @score = Score.new
   end
 
   def display_welcome_message
@@ -97,16 +118,20 @@ class RPSGame
     puts "Thanks for playing Rock, Paper, Scissors. Goodbye!"
   end
 
-  def display_winner
+  def display_choice
     puts "#{human.name} chose #{human.move}"
     puts "#{computer.name} chose #{computer.move}"
+  end
+
+  def display_winner
+    display_choice
 
     if human.move > computer.move
       puts "#{human.name} won!"
-      human.score += 1
+      score.increment('human')
     elsif computer.move > human.move
       puts "#{computer.name} won!"
-      computer.score += 1
+      score.increment('computer')
     else
       puts "It's a tie"
     end
@@ -126,6 +151,11 @@ class RPSGame
     false
   end
 
+  def display_score
+    puts "#{human.name}'s score is #{score.human}"
+    puts "#{computer.name}'s score is #{score.computer}"
+  end
+
   def play
     display_welcome_message
 
@@ -133,6 +163,8 @@ class RPSGame
       human.choose
       computer.choose
       display_winner
+      display_score
+      break if score.max?
       break unless play_again?
     end
 
