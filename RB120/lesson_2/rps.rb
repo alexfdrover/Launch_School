@@ -19,37 +19,63 @@ class Score
   end
 end
 
+class History
+  def initialize
+    @history = []
+  end
+
+  def add(results)
+    @history << results
+  end
+
+  def results
+    @history.each_with_index do |arr, idx|
+      puts "Round #{idx}: Human => #{arr.first} - Computer => #{arr.last}"
+    end
+  end
+end
+
 class Move
   VALUES = ['rock', 'paper', 'scissors', 'lizard', 'spock']
 
-  attr_reader :value
+  attr_reader :value, :name, :weaknesses
 
   def initialize(value)
-    @value = value
+    @value = assignment(value)
+  end
+
+  def assignment(value)
+    case value
+    when 'rock' then Rock.new
+    when 'paper' then Paper.new
+    when 'scissors' then Scissors.new
+    when 'lizard' then Lizard.new
+    when 'spock' then Spock.new
+    end
   end
 
   def to_s
-    @value
+    @value.name
   end
 
   def scissors?
-    @value == 'scissors'
+    @value.name == 'scissors'
   end
 
   def rock?
-    @value == 'rock'
+    @value.name == 'rock'
   end
 
   def paper?
-    @value == 'paper'
+    @value.name == 'paper'
   end
 
   def lizard?
-    @value == 'lizard'
+    @value.name == 'lizard'
   end
 
   def spock?
-    @value == 'spock'
+    @value.name == 'spock'
   end
 
   def >(other_move)
@@ -58,6 +84,43 @@ class Move
       scissors? && (other_move.paper? || other_move.lizard?)  ||
       lizard? && (other_move.paper? || other_move.spock?)     ||
       spock? && (other_move.scissors? || other_move.rock?)
+  end
+end
+
+class Rock < Move
+  attr_reader :weaknesses
+
+  def initialize
+    @name = 'rock'
+    @weaknesses = ['paper', 'spock']
+  end
+end
+
+class Paper < Move
+  def initialize
+    @name = 'paper'
+    @weaknesses = ['scissors', 'lizard']
+  end
+end
+
+class Scissors < Move
+  def initialize
+    @name = 'scissors'
+    @weaknesses = ['rock', 'spock']
+  end
+end
+
+class Lizard < Move
+  def initialize
+    @name = 'lizard'
+    @weaknesses = ['scissors', 'rock']
+  end
+end
+
+class Spock < Move
+  def initialize
+    @name = 'spock'
+    @weaknesses = ['lizard', 'paper']
   end
 end
 
@@ -166,18 +229,24 @@ class RPSGame
     puts "#{computer.name}'s score is #{score.computer}"
   end
 
+  def store_round(history)
+    history.add([human.move, computer.move])
+  end
+
   def play
     display_welcome_message
+    history = History.new
 
     loop do
       human.choose
       computer.choose
+      store_round(history)
       display_winner
       display_score
-      break if score.max?
-      break unless play_again?
+      break if score.max? || play_again? == false
+      
     end
-
+    history.results
     display_goodbye_message
   end
 end
