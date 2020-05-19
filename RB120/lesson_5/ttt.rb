@@ -58,12 +58,34 @@ class Board
   end
   # rubocop: enable Metrics/AbcSize
 
+  def one_away_from_losing?
+    WINNING_LINES.each do |line|
+      squares = @squares.values_at(*line)
+      if two_opponent_markers?(squares)
+        return line
+      end
+    end
+    nil
+  end
+
+  def choose_third_position
+    losing_line = one_away_from_losing?
+    losing_line.select { |position| @squares.fetch(position).marker == Square::INITIAL_MARKER}[0]
+  end
+
   private
 
   def three_identical_markers?(squares)
     markers = squares.select(&:marked?).collect(&:marker)
     return false if markers.size != 3
     markers.min == markers.max
+  end
+
+  def two_opponent_markers?(squares)
+    markers = squares.select(&:marked?).collect(&:marker)
+    return false if markers.size != 2
+    return false if markers.any?(TTTGame::COMPUTER_MARKER)
+    true
   end
 end
 
@@ -91,9 +113,11 @@ end
 
 class Player
   attr_reader :marker
+  attr_accessor :score
 
   def initialize(marker)
     @marker = marker
+    @score = 0
   end
 end
 
@@ -101,6 +125,7 @@ class TTTGame
   HUMAN_MARKER = 'X'
   COMPUTER_MARKER = 'O'
   FIRST_TO_MOVE = HUMAN_MARKER
+  MAX_WINS = 4
 
   attr_reader :board, :human, :computer
 
@@ -119,6 +144,7 @@ class TTTGame
 
   def display_welcome_message
     puts "Welcome to Tic Tac Toe"
+    puts "First to #{MAX_WINS + 1} wins!"
     puts ""
   end
 
@@ -161,7 +187,11 @@ class TTTGame
   end
 
   def computer_moves
-    board[board.unmarked_keys.sample] = computer.marker
+    if board.one_away_from_losing?
+      board[board.choose_third_position] = computer.marker
+    else
+      board[board.unmarked_keys.sample] = computer.marker
+    end
   end
 
   def current_player_moves
@@ -182,8 +212,12 @@ class TTTGame
     clear_screen_and_display_board
 
     case board.winning_marker
-    when human.marker then puts "You won!"
-    when computer.marker then puts "Computer won!"
+    when human.marker
+      puts "You won!"
+      human.score += 1
+    when computer.marker
+      puts "Computer won!"
+      computer.score += 1
     else puts "It's a tie!"
     end
   end
@@ -211,6 +245,14 @@ class TTTGame
     puts ""
   end
 
+  def max_score_reached?
+    human.score > MAX_WINS || computer.score > MAX_WINS
+  end
+
+  def display_score
+    puts "Human: #{human.score} -- Computer: #{computer.score}"
+  end
+
   public
 
   def play
@@ -227,7 +269,9 @@ class TTTGame
       end
 
       display_result
-      break unless play_again?
+      display_score
+
+      break if max_score_reached? || play_again? == false
       reset
       display_play_again_message
     end
