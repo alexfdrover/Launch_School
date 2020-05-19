@@ -61,7 +61,7 @@ class Board
   def one_away_from_losing?
     WINNING_LINES.each do |line|
       squares = @squares.values_at(*line)
-      if two_opponent_markers?(squares)
+      if two_markers_in_row?(squares, 'human')
         return line
       end
     end
@@ -71,7 +71,7 @@ class Board
   def one_away_from_winning?
     WINNING_LINES.each do |line|
       squares = @squares.values_at(*line)
-      if two_computer_markers?(squares)
+      if two_markers_in_row?(squares, 'computer')
         return line
       end
     end
@@ -90,17 +90,15 @@ class Board
     markers.min == markers.max
   end
 
-  def two_opponent_markers?(squares)
-    markers = squares.select(&:marked?).collect(&:marker)
-    return false if markers.size != 2
-    return false if markers.any?(TTTGame::COMPUTER_MARKER)
-    true
-  end
+  def two_markers_in_row?(squares, whose_two_in_row)
+    case whose_two_in_row
+    when "computer" then marker = TTTGame::HUMAN_MARKER
+    when "human" then marker = TTTGame::COMPUTER_MARKER
+    end
 
-  def two_computer_markers?(squares)
     markers = squares.select(&:marked?).collect(&:marker)
     return false if markers.size != 2
-    return false if markers.any?(TTTGame::HUMAN_MARKER)
+    return false if markers.any?(marker)
     true
   end
 end
