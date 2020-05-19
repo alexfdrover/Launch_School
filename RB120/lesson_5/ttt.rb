@@ -15,7 +15,7 @@ class Board
   end
 
   def unmarked_keys
-    @squares.keys.select {|key| @squares[key].unmarked?}
+    @squares.keys.select { |key| @squares[key].unmarked? }
   end
 
   def full?
@@ -38,9 +38,10 @@ class Board
   end
 
   def reset
-    (1..9).each {|key| @squares[key] = Square.new}
+    (1..9).each { |key| @squares[key] = Square.new }
   end
 
+  # rubocop:disable Metrics/AbcSize
   def draw
     puts "     |     |     "
     puts "  #{@squares[1]}  |  #{@squares[2]}  |  #{@squares[3]}"
@@ -55,6 +56,7 @@ class Board
     puts "     |     |     "
     puts ""
   end
+  # rubocop: enable Metrics/AbcSize
 
   private
 
@@ -159,7 +161,6 @@ class TTTGame
       computer_moves
       @current_marker = HUMAN_MARKER
     end
-
   end
 
   def human_turn?
@@ -205,11 +206,9 @@ class TTTGame
     clear
     display_welcome_message
 
-    # play again loop
     loop do
       display_board
 
-      # player logic loop
       loop do
         current_player_moves
         break if board.someone_won? || board.full?
