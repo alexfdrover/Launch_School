@@ -14,6 +14,10 @@ class Board
     @squares[num].marker = marker
   end
 
+  def [](num)
+    @squares[num].marker
+  end
+
   def unmarked_keys
     @squares.keys.select { |key| @squares[key].unmarked? }
   end
@@ -58,7 +62,7 @@ class Board
   end
   # rubocop: enable Metrics/AbcSize
 
-  def one_away_from_losing?
+  def one_away_from_losing
     WINNING_LINES.each do |line|
       squares = @squares.values_at(*line)
       if two_markers_in_row?(squares, 'human')
@@ -68,7 +72,7 @@ class Board
     nil
   end
 
-  def one_away_from_winning?
+  def one_away_from_winning
     WINNING_LINES.each do |line|
       squares = @squares.values_at(*line)
       if two_markers_in_row?(squares, 'computer')
@@ -79,7 +83,7 @@ class Board
   end
 
   def choose_third_position(line)
-    line.select { |position| @squares.fetch(position).marker == Square::INITIAL_MARKER}[0]
+    line.select { |position| @squares.fetch(position).marker == Square::INITIAL_MARKER }[0]
   end
 
   private
@@ -201,12 +205,14 @@ class TTTGame
   end
 
   def computer_moves
-    if board.one_away_from_winning?
-      line = board.one_away_from_winning?
+    if !!board.one_away_from_winning
+      line = board.one_away_from_winning
       board[board.choose_third_position(line)] = computer.marker
-    elsif board.one_away_from_losing?
-      line = board.one_away_from_losing?
+    elsif !!board.one_away_from_losing
+      line = board.one_away_from_losing
       board[board.choose_third_position(line)] = computer.marker
+    elsif board[5] == ' '
+      board[5] = computer.marker
     else
       board[board.unmarked_keys.sample] = computer.marker
     end
