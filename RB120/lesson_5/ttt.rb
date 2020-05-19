@@ -68,9 +68,18 @@ class Board
     nil
   end
 
-  def choose_third_position
-    losing_line = one_away_from_losing?
-    losing_line.select { |position| @squares.fetch(position).marker == Square::INITIAL_MARKER}[0]
+  def one_away_from_winning?
+    WINNING_LINES.each do |line|
+      squares = @squares.values_at(*line)
+      if two_computer_markers?(squares)
+        return line
+      end
+    end
+    nil
+  end
+
+  def choose_third_position(line)
+    line.select { |position| @squares.fetch(position).marker == Square::INITIAL_MARKER}[0]
   end
 
   private
@@ -85,6 +94,13 @@ class Board
     markers = squares.select(&:marked?).collect(&:marker)
     return false if markers.size != 2
     return false if markers.any?(TTTGame::COMPUTER_MARKER)
+    true
+  end
+
+  def two_computer_markers?(squares)
+    markers = squares.select(&:marked?).collect(&:marker)
+    return false if markers.size != 2
+    return false if markers.any?(TTTGame::HUMAN_MARKER)
     true
   end
 end
@@ -187,8 +203,12 @@ class TTTGame
   end
 
   def computer_moves
-    if board.one_away_from_losing?
-      board[board.choose_third_position] = computer.marker
+    if board.one_away_from_winning?
+      line = board.one_away_from_winning?
+      board[board.choose_third_position(line)] = computer.marker
+    elsif board.one_away_from_losing?
+      line = board.one_away_from_losing?
+      board[board.choose_third_position(line)] = computer.marker
     else
       board[board.unmarked_keys.sample] = computer.marker
     end
