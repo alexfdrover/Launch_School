@@ -1,4 +1,4 @@
-
+require 'pry'
 
 class Board
   WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9],
@@ -138,8 +138,19 @@ class TTTGame
     display_board
   end
 
+  def join_or(list_of_empty_squares, delimiter=', ')
+    if list_of_empty_squares.size == 2
+      list_of_empty_squares.join(' or ')
+    elsif list_of_empty_squares.size == 1
+      list_of_empty_squares.first
+    else
+      list_of_empty_squares[-1] = 'or ' + list_of_empty_squares[-1].to_s
+      list_of_empty_squares.join(delimiter)
+    end
+  end
+
   def human_moves
-    puts "Choose a square (#{board.unmarked_keys.join(', ')}): "
+    puts "Choose a square (#{join_or(board.unmarked_keys)}): "
     square = nil
     loop do
       square = gets.chomp.to_i
