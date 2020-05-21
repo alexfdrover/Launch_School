@@ -58,12 +58,15 @@ class Deck
   CARD_FACES = %w(2 3 4 5 6 7 8 9 10 jack queen king ace)
   CARD_SUITS = %w(hearts diamonds clubs spades)
   
-
   def initialize
     @undrawn_cards = []
+    load_deck
+  end
+
+  def load_deck
     CARD_FACES.each do |card_face|
       CARD_SUITS.each do |card_suit|
-        @undrawn_cards << [card_face, card_suit]
+        @undrawn_cards << Card.new(card_face, card_suit)
       end
     end
   end
@@ -74,7 +77,12 @@ class Deck
 
 end
 
-class Card; end
+class Card
+  def initialize(card_face, card_suit)
+    @card_face = card_face
+    @card_suit = card_suit
+  end
+end
 
 class Game
   attr_reader :player, :dealer, :deck
