@@ -60,7 +60,12 @@ class Deck
   
 
   def initialize
-    @undrawn_cards = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+    @undrawn_cards = []
+    CARD_FACES.each do |card_face|
+      CARD_SUITS.each do |card_suit|
+        @undrawn_cards << [card_face, card_suit]
+      end
+    end
   end
 
   def draw
