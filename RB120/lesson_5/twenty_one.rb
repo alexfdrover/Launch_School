@@ -35,46 +35,43 @@ Module Hand
 require 'pry'
 
 class Player
+  attr_reader :cards_in_hand
+
   def initialize
     @cards_in_hand = []
-  end
-
-  def hit(num_of_draws = 1)
-    @cards_in_hand << 1
   end
 end
 
 class Dealer
+  attr_reader :cards_in_hand
+
   def initialize
     @cards_in_hand = []
-  end
-
-  def hit(num_of_draws = 1)
-    @cards_in_hand << 1
   end
 end
 
 class Deck
+  attr_reader :undrawn_cards
   CARD_FACES = %w(2 3 4 5 6 7 8 9 10 jack queen king ace)
   CARD_SUITS = %w(hearts diamonds clubs spades)
   
   def initialize
     @undrawn_cards = []
-    load_deck
+    load_deck_and_shuffle
   end
 
-  def load_deck
+  def load_deck_and_shuffle
     CARD_FACES.each do |card_face|
       CARD_SUITS.each do |card_suit|
         @undrawn_cards << Card.new(card_face, card_suit)
       end
     end
+    @undrawn_cards.shuffle!
   end
 
-  def draw
-    @undrawn_cards.sample
+  def hit(participant, amount_of_cards)
+    participant.cards_in_hand << @undrawn_cards.pop(amount_of_cards)
   end
-
 end
 
 class Card
@@ -94,8 +91,9 @@ class Game
   end
 
   def deal_cards
-    player.hit(2)
-    dealer.hit(2)
+    deck.hit(player, 2)
+    deck.hit(dealer, 2)
+    binding.pry
   end
 
   def start
