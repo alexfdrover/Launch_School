@@ -36,6 +36,7 @@ require 'pry'
 module Hand; end
 
 class Player
+  MAX_SCORE = 21
   attr_accessor :cards_in_hand
 
   def initialize
@@ -56,6 +57,10 @@ class Player
       current_score += card.card_value
     end
     current_score
+  end
+
+  def busted?
+    score > MAX_SCORE
   end
 end
 
@@ -138,11 +143,15 @@ class Game
     system 'clear'
   end
 
+  def hit_or_stay_prompt
+    puts "Player's current score is: #{player.score}"
+    puts "Hit or stay?: "
+  end
+
   def player_turn
     answer = nil
     loop do
-      puts "Player's current score is: #{player.score}"
-      puts "Hit or stay?: "
+      hit_or_stay_prompt
       answer = gets.chomp.downcase
 
       case answer
@@ -151,12 +160,18 @@ class Game
         deck.hit(player)
         clear
         show_cards
+        if player.busted?
+          puts "Player's score is #{player.score} - busted! Dealer won!"
+          break
+        end
       else puts "Please enter 'hit' or 'stay'"
       end
+
     end
   end
 
   def start
+    clear
     deal_cards
     show_cards
     player_turn
