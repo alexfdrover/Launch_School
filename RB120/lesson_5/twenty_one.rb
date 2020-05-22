@@ -32,7 +32,7 @@ end
 
 class Player
   include Hand
-  
+
   def show_cards
     current_cards = ''
     cards_in_hand.flatten.each do |card|
@@ -59,9 +59,9 @@ class Deck
 
   CARD_FACES = %w(2 3 4 5 6 7 8 9 10 jack queen king ace)
   CARD_SUITS = %w(hearts diamonds clubs spades)
-  CARD_VALUES = {'2'=>2, '3'=>3, '4'=>4, '5'=>5, '6'=>6, '7'=>7,
-                 '8'=>8, '9'=>9, '10'=>10, 'jack'=>10, 'queen'=>10,
-                 'king'=>10, 'ace'=>11}
+  CARD_VALUES = { '2' => 2, '3' => 3, '4' => 4, '5' => 5, '6' => 6, '7' => 7,
+                  '8' => 8, '9' => 9, '10' => 10, 'jack' => 10, 'queen' => 10,
+                  'king' => 10, 'ace' => 11 }
 
   def initialize
     @undrawn_cards = []
@@ -146,12 +146,13 @@ class Game
         end
       else puts "Please enter 'hit' or 'stay'"
       end
-
     end
   end
 
   def dealer_turn
-    loop do # this outer loop should never run more than once. Exists to skip dealer's turn if player has busted
+    # this outer loop should never run more than once
+    # Exists to skip dealer's turn if player has busted
+    loop do
       break if player.busted?
 
       while dealer.score < HIT_MINIMUM
@@ -162,14 +163,15 @@ class Game
         end
       end
 
-      break # ensures outer loop never runs more than once as mentioned at loop start
+      # ensures outer loop never runs more than once as mentioned at loop start
+      break
     end
   end
 
   def compare_scores
     player_score = player.score
     dealer_score = dealer.score
-    puts "Player's score is #{player_score} -- Dealer's score is #{dealer_score}"
+    puts "Player's score is #{player_score} - Dealer's score is #{dealer_score}"
 
     if player_score > dealer_score
       puts "Player wins!"
@@ -181,14 +183,17 @@ class Game
   end
 
   def show_result
-    loop do # this loop should never run more than once - it exists to skip any action if either participant has busted
+    # this loop should never run more than once
+    # it exists to skip any action if either participant has busted
+    loop do
       break if player.busted? || dealer.busted?
 
       clear
       show_cards
       compare_scores
 
-      break # ensures outer loop never runs more than once as mentioned at loop start
+      # ensures outer loop never runs more than once as mentioned at loop start
+      break
     end
   end
 
