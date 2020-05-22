@@ -1,37 +1,4 @@
 
-# 52 card deck with 4 suits and 13 values (2 - ace high)
-# want score closest to 21 without going over. closest wins
-# two players - human and dealer
-# each player initially dealt two cards
-# human can see both of their cards, but only one of the dealer's cards
-# card values: 2-10: face, j,q,k: 10, ace: 11
-# order of gameplay:
-# - player turn first, can hit or stay
-# -- hit means get another card
-# -- keep prompting hit or stay until either bust or stay
-# - dealer turn next
-# -- hit until total is >= 17, then stay
-# - if neither player has busted, compare card values and display results
-
-
-# nouns: player, dealer, deck, card, participant, game
-# verbs: hit, stay, deal, bust, calculate_total
-
-=begin
-Player
-Dealer
-Deck
-- deal
-Card
-Game
-- start
-Module Hand
-- hit
-- stay
-- busted?
-- total
-=end
-
 require 'pry'
 
 module Hand
@@ -43,9 +10,18 @@ module Hand
 
   def score
     current_score = 0
+    aces = 0
+
     @cards_in_hand.flatten.each do |card|
       current_score += card.card_value
+      aces += 1 if card.card_face == 'ace'
     end
+
+    while aces > 0
+      current_score -= 10 if current_score > Game::MAX_SCORE
+      aces -= 1
+    end
+
     current_score
   end
 
