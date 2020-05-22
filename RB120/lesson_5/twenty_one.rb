@@ -40,6 +40,14 @@ class Player
   def initialize
     @cards_in_hand = []
   end
+
+  def show_cards
+    current_cards = ''
+    self.cards_in_hand[0].each do |card|
+      current_cards += "#{card.card_face} of #{card.card_suit}, "
+    end
+    current_cards
+  end
 end
 
 class Dealer
@@ -48,10 +56,19 @@ class Dealer
   def initialize
     @cards_in_hand = []
   end
+
+  def show_cards
+    current_cards = 'Unknown card, '
+    self.cards_in_hand[0].each_with_index do |card, idx|
+      current_cards += "#{card.card_face} of #{card.card_suit}, " if idx > 0
+    end
+    current_cards
+  end
 end
 
 class Deck
   attr_reader :undrawn_cards
+
   CARD_FACES = %w(2 3 4 5 6 7 8 9 10 jack queen king ace)
   CARD_SUITS = %w(hearts diamonds clubs spades)
   
@@ -75,6 +92,8 @@ class Deck
 end
 
 class Card
+  attr_reader :card_face, :card_suit
+
   def initialize(card_face, card_suit)
     @card_face = card_face
     @card_suit = card_suit
@@ -93,12 +112,16 @@ class Game
   def deal_cards
     deck.hit(player, 2)
     deck.hit(dealer, 2)
-    binding.pry
+  end
+
+  def show_initial_cards
+    puts "Player's cards are: #{player.show_cards}"
+    puts "Dealer's cards are: #{dealer.show_cards}"
   end
 
   def start
     deal_cards
-    # show_initial_cards
+    show_initial_cards
     # player_turn
     # dealer_turn
     # show_result
