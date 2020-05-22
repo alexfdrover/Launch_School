@@ -38,7 +38,7 @@ class Player
     cards_in_hand.flatten.each do |card|
       current_cards += "#{card.card_face} of #{card.card_suit}, "
     end
-    current_cards
+    current_cards[0..-3]
   end
 end
 
@@ -50,7 +50,7 @@ class Dealer
     cards_in_hand.flatten.each_with_index do |card, idx|
       current_cards += "#{card.card_face} of #{card.card_suit}, " if idx > 0
     end
-    current_cards
+    current_cards[0..-3]
   end
 end
 
