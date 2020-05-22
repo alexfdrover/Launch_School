@@ -33,9 +33,10 @@ Module Hand
 =end
 
 require 'pry'
+module Hand; end
 
 class Player
-  attr_reader :cards_in_hand
+  attr_accessor :cards_in_hand
 
   def initialize
     @cards_in_hand = []
@@ -47,6 +48,15 @@ class Player
       current_cards += "#{card.card_face} of #{card.card_suit}, "
     end
     current_cards
+  end
+
+  def score
+    current_score = 0
+    #binding.pry
+    @cards_in_hand[0].each do |card|
+      current_score += card.card_value
+    end
+    current_score
   end
 end
 
@@ -71,7 +81,10 @@ class Deck
 
   CARD_FACES = %w(2 3 4 5 6 7 8 9 10 jack queen king ace)
   CARD_SUITS = %w(hearts diamonds clubs spades)
-  
+  CARD_VALUES = {'2'=>2, '3'=>3, '4'=>4, '5'=>5, '6'=>6, '7'=>7,
+                 '8'=>8, '9'=>9, '10'=>10, 'jack'=>10, 'queen'=>10,
+                 'king'=>10, 'ace'=>11}
+
   def initialize
     @undrawn_cards = []
     load_deck_and_shuffle
@@ -80,23 +93,26 @@ class Deck
   def load_deck_and_shuffle
     CARD_FACES.each do |card_face|
       CARD_SUITS.each do |card_suit|
-        @undrawn_cards << Card.new(card_face, card_suit)
+        card_value = CARD_VALUES.fetch(card_face)
+        @undrawn_cards << Card.new(card_face, card_suit, card_value)
       end
     end
+
     @undrawn_cards.shuffle!
   end
 
-  def hit(participant, amount_of_cards)
+  def hit(participant, amount_of_cards = 1)
     participant.cards_in_hand << @undrawn_cards.pop(amount_of_cards)
   end
 end
 
 class Card
-  attr_reader :card_face, :card_suit
+  attr_reader :card_face, :card_suit, :card_value
 
-  def initialize(card_face, card_suit)
+  def initialize(card_face, card_suit, card_value)
     @card_face = card_face
     @card_suit = card_suit
+    @card_value = card_value
   end
 end
 
@@ -119,10 +135,33 @@ class Game
     puts "Dealer's cards are: #{dealer.show_cards}"
   end
 
+  def clear
+    system 'clear'
+  end
+
+  def player_turn
+    answer = nil
+    loop do
+      puts "Your current score is: #{player.score}"
+      puts "Hit or stay?: "
+      answer = gets.chomp.downcase
+
+      case answer
+      when 'stay' then break
+      when 'hit'
+        deck.hit(player)
+        puts "Player's cards are: #{player.show_cards}" #this is not displaying the updated cards after hitting
+        #binding.pry
+      else puts "Please enter 'hit' or 'stay'"
+      end
+
+    end
+  end
+
   def start
     deal_cards
     show_initial_cards
-    # player_turn
+    player_turn
     # dealer_turn
     # show_result
   end
