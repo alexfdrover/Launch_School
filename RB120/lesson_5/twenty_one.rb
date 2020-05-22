@@ -44,7 +44,7 @@ class Player
 
   def show_cards
     current_cards = ''
-    self.cards_in_hand[0].each do |card|
+    cards_in_hand.flatten.each do |card|
       current_cards += "#{card.card_face} of #{card.card_suit}, "
     end
     current_cards
@@ -52,8 +52,7 @@ class Player
 
   def score
     current_score = 0
-    #binding.pry
-    @cards_in_hand[0].each do |card|
+    @cards_in_hand.flatten.each do |card|
       current_score += card.card_value
     end
     current_score
@@ -130,7 +129,7 @@ class Game
     deck.hit(dealer, 2)
   end
 
-  def show_initial_cards
+  def show_cards
     puts "Player's cards are: #{player.show_cards}"
     puts "Dealer's cards are: #{dealer.show_cards}"
   end
@@ -142,7 +141,7 @@ class Game
   def player_turn
     answer = nil
     loop do
-      puts "Your current score is: #{player.score}"
+      puts "Player's current score is: #{player.score}"
       puts "Hit or stay?: "
       answer = gets.chomp.downcase
 
@@ -150,17 +149,16 @@ class Game
       when 'stay' then break
       when 'hit'
         deck.hit(player)
-        puts "Player's cards are: #{player.show_cards}" #this is not displaying the updated cards after hitting
-        #binding.pry
+        clear
+        show_cards
       else puts "Please enter 'hit' or 'stay'"
       end
-
     end
   end
 
   def start
     deal_cards
-    show_initial_cards
+    show_cards
     player_turn
     # dealer_turn
     # show_result
