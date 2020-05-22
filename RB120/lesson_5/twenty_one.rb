@@ -136,16 +136,13 @@ class Game
       hit_or_stay_prompt
       answer = gets.chomp.downcase
 
-      case answer
-      when 'stay' then break
-      when 'hit'
-        hit_operations(player)
-        if player.busted?
-          puts "Player's score is #{player.score} - busted! Dealer won!"
-          break
-        end
-      else puts "Please enter 'hit' or 'stay'"
+      hit_operations(player) if answer == 'hit'
+      if player.busted?
+        puts "Player's score is #{player.score} - busted! Dealer won!"
+        break
       end
+
+      break if answer == 'stay'
     end
   end
 
