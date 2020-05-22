@@ -190,13 +190,39 @@ class Game
     end
   end
 
+  def compare_scores
+    player_score = player.score
+    dealer_score = dealer.score
+    puts "Player's score is #{player_score} -- Dealer's score is #{dealer_score}"
+
+    if player_score > dealer_score
+      puts "Player wins!"
+    elsif dealer_score > player_score
+      puts "Dealer wins!"
+    else
+      puts "It's a tie!"
+    end
+  end
+
+  def show_result
+    loop do # this loop should never run more than once - it exists to skip any action if either participant has busted
+      break if player.busted? || dealer.busted?
+
+      clear
+      show_cards
+      compare_scores
+
+      break # ensures outer loop never runs more than once as mentioned at loop start
+    end
+  end
+
   def start
     clear
     deal_cards
     show_cards
     player_turn
     dealer_turn
-    # show_result
+    show_result
   end
 end
 
