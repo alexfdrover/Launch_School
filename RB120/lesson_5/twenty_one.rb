@@ -33,21 +33,12 @@ Module Hand
 =end
 
 require 'pry'
-module Hand; end
 
-class Player
-  attr_accessor :cards_in_hand
+module Hand
+  attr_reader :cards_in_hand
 
   def initialize
     @cards_in_hand = []
-  end
-
-  def show_cards
-    current_cards = ''
-    cards_in_hand.flatten.each do |card|
-      current_cards += "#{card.card_face} of #{card.card_suit}, "
-    end
-    current_cards
   end
 
   def score
@@ -63,32 +54,27 @@ class Player
   end
 end
 
-class Dealer
-  HIT_MINIMUM = 17
-  attr_reader :cards_in_hand
-
-  def initialize
-    @cards_in_hand = []
-  end
-
+class Player
+  include Hand
+  
   def show_cards
-    current_cards = 'Unknown card, '
-    self.cards_in_hand.flatten.each_with_index do |card, idx|
-      current_cards += "#{card.card_face} of #{card.card_suit}, " if idx > 0
+    current_cards = ''
+    cards_in_hand.flatten.each do |card|
+      current_cards += "#{card.card_face} of #{card.card_suit}, "
     end
     current_cards
   end
+end
 
-  def score
-    current_score = 0
-    @cards_in_hand.flatten.each do |card|
-      current_score += card.card_value
+class Dealer
+  include Hand
+
+  def show_cards
+    current_cards = 'Unknown card, '
+    cards_in_hand.flatten.each_with_index do |card, idx|
+      current_cards += "#{card.card_face} of #{card.card_suit}, " if idx > 0
     end
-    current_score
-  end
-
-  def busted?
-    score > Game::MAX_SCORE
+    current_cards
   end
 end
 
@@ -134,6 +120,7 @@ end
 
 class Game
   MAX_SCORE = 21
+  HIT_MINIMUM = 17
   attr_reader :player, :dealer, :deck
 
   def initialize
@@ -191,7 +178,7 @@ class Game
     loop do # this outer loop should never run more than once. Exists to skip dealer's turn if player has busted
       break if player.busted?
 
-      while dealer.score < Dealer::HIT_MINIMUM
+      while dealer.score < HIT_MINIMUM
         hit_operations(dealer)
         if dealer.busted?
           puts "Dealer's score is #{dealer.score} - busted! Player won!"
