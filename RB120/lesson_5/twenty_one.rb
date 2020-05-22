@@ -36,7 +36,6 @@ require 'pry'
 module Hand; end
 
 class Player
-  MAX_SCORE = 21
   attr_accessor :cards_in_hand
 
   def initialize
@@ -60,11 +59,12 @@ class Player
   end
 
   def busted?
-    score > MAX_SCORE
+    score > Game::MAX_SCORE
   end
 end
 
 class Dealer
+  HIT_MINIMUM = 17
   attr_reader :cards_in_hand
 
   def initialize
@@ -73,10 +73,22 @@ class Dealer
 
   def show_cards
     current_cards = 'Unknown card, '
-    self.cards_in_hand[0].each_with_index do |card, idx|
+    self.cards_in_hand.flatten.each_with_index do |card, idx|
       current_cards += "#{card.card_face} of #{card.card_suit}, " if idx > 0
     end
     current_cards
+  end
+
+  def score
+    current_score = 0
+    @cards_in_hand.flatten.each do |card|
+      current_score += card.card_value
+    end
+    current_score
+  end
+
+  def busted?
+    score > Game::MAX_SCORE
   end
 end
 
@@ -121,6 +133,7 @@ class Card
 end
 
 class Game
+  MAX_SCORE = 21
   attr_reader :player, :dealer, :deck
 
   def initialize
@@ -148,6 +161,12 @@ class Game
     puts "Hit or stay?: "
   end
 
+  def hit_operations(participant)
+    deck.hit(participant)
+    clear
+    show_cards
+  end
+
   def player_turn
     answer = nil
     loop do
@@ -157,9 +176,7 @@ class Game
       case answer
       when 'stay' then break
       when 'hit'
-        deck.hit(player)
-        clear
-        show_cards
+        hit_operations(player)
         if player.busted?
           puts "Player's score is #{player.score} - busted! Dealer won!"
           break
@@ -170,12 +187,28 @@ class Game
     end
   end
 
+  def dealer_turn
+    loop do # this outer loop should never run more than once. Exists to skip dealer's turn if player has busted
+      break if player.busted?
+
+      while dealer.score < Dealer::HIT_MINIMUM
+        hit_operations(dealer)
+        if dealer.busted?
+          puts "Dealer's score is #{dealer.score} - busted! Player won!"
+          break
+        end
+      end
+
+      break # ensures outer loop never runs more than once as mentioned at loop start
+    end
+  end
+
   def start
     clear
     deal_cards
     show_cards
     player_turn
-    # dealer_turn
+    dealer_turn
     # show_result
   end
 end
