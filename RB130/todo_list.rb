@@ -130,6 +130,30 @@ class TodoList
   def find_by_title(str)
     select {|todo| todo.title == str}.first
   end
+
+  def all_done
+    select {|todo| todo.done?}
+  end
+
+  def all_not_done
+    select {|todo| !todo.done?}
+  end
+
+  def mark_done(str)
+    find_by_title(str).done!
+  end
+
+  def mark_all_done
+    each do |todo|
+      todo.done!
+    end
+  end
+
+  def mark_all_undone
+    each do |todo|
+      todo.undone!
+    end
+  end
 end
 
 todo1 = Todo.new("Buy milk")
@@ -141,4 +165,3 @@ list.add(todo1)
 list.add(todo2)
 list.add(todo3)
 
-p list.find_by_title("Buy milk")
