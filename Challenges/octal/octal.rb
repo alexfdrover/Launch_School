@@ -1,6 +1,7 @@
 
 class Octal
   BASE = 8
+  
   def initialize(octal_num)
     @octal_num = octal_num
   end
