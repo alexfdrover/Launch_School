@@ -5,21 +5,23 @@ class SumOfMultiples
   end
 
   def to(n)
+    self.class.to(n, @multiples)
+  end
+
+  def self.to(n, multiples = [3, 5])
     return 0 if n == 1
     container = []
-    @multiples.each do |num|
+    multiples.each do |num|
       num.step(by: num, to: n-1) { |int| container << int }
     end
     container.uniq.reduce(:+)
   end
 
-  def self.to(n)
+  def self.to(n, multiples = [3, 5])
     return 0 if n == 1
-    container = []
-    [3,5].each do |num|
-      num.step(by: num, to: n-1) { |int| container << int }
-    end
-    container.uniq.reduce(:+)
+    
+    (1...n).select { |num| num % }
+    
   end
 end
 
