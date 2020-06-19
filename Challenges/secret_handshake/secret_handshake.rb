@@ -1,5 +1,6 @@
 class SecretHandshake
   attr_accessor :binary
+  COMMANDS = ['wink', 'double blink', 'close your eyes', 'jump']
 
   def initialize(input)
     @input = input
@@ -11,11 +12,11 @@ class SecretHandshake
     binary_conversion
     digits = @binary.chars
 
-    add('wink') if digits.pop == '1'
-    add('double blink') if digits.pop == '1'
-    add('close your eyes') if digits.pop == '1'
-    add('jump') if digits.pop == '1'
-    @actions.reverse! if digits.pop == '1'
+    add('COMMANDS[0]')  if digits.pop == '1'
+    add('COMMANDS[1]')  if digits.pop == '1'
+    add('COMMANDS[2]')  if digits.pop == '1'
+    add('COMMANDS[3]')  if digits.pop == '1'
+    @actions.reverse!   if digits.pop == '1'
     @actions
   end
 
