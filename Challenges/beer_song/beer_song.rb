@@ -1,9 +1,9 @@
 class BeerSong
   def initialize
-    @verse_lookup = { 0 => ZeroVerse, 
-                      1 => OneVerse, 
+    @verse_lookup = { 0 => ZeroVerse,
+                      1 => OneVerse,
                       2 => TwoVerse,
-                      3..99 => DefaultVerse 
+                      3..99 => DefaultVerse
                     }
   end
 
