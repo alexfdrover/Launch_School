@@ -21,10 +21,12 @@ class Luhn
 
   def self.create(input)
     number = Luhn.new(input * 10)
-    while !number.valid?
-      number.input += 1
+    if number.valid?
+      number.input
+    else
+      remainder = number.checksum % 10
+      number.input += (10 - remainder)
     end
-    number.input
   end
 
   def valid?
