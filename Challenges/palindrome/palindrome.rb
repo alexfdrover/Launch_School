@@ -27,6 +27,7 @@
 
 class PalindromeConfirmer
   attr_reader :ordinal_array
+
   VALID_RANGE = (97..122)
 
   def initialize(input)
@@ -34,7 +35,7 @@ class PalindromeConfirmer
     @ordinal_array = nil
   end
 
-  def is_a_palindrome?
+  def a_palindrome?
     return false if invalid_input?
     make_ordinal_array
 
@@ -49,17 +50,19 @@ class PalindromeConfirmer
   end
 
   def invalid_input?
-    @input.empty? || (@input.chars.none? {|char| (VALID_RANGE === char.ord) })
+    @input.empty? || (@input.chars.none? { |char| (VALID_RANGE === char.ord) })
   end
 
   def make_ordinal_array
-    @ordinal_array = @input.chars.map { |char| VALID_RANGE === char.ord ? char.ord : nil }.compact
+    @ordinal_array = @input.chars
+                           .map { |char| VALID_RANGE === char.ord ? char.ord : nil }
+                           .compact
   end
 end
 
-p PalindromeConfirmer.new("%^&aba").is_a_palindrome? == true
-p PalindromeConfirmer.new("%^&").is_a_palindrome? == false
-p PalindromeConfirmer.new("%^&a").is_a_palindrome? == true
-p PalindromeConfirmer.new("rotor").is_a_palindrome? == true
-p PalindromeConfirmer.new("motor").is_a_palindrome? == false
-p PalindromeConfirmer.new("no1, 3on").is_a_palindrome? == true
+p PalindromeConfirmer.new("%^&aba").a_palindrome? == true
+p PalindromeConfirmer.new("%^&").a_palindrome? == false
+p PalindromeConfirmer.new("%^&a").a_palindrome? == true
+p PalindromeConfirmer.new("rotor").a_palindrome? == true
+p PalindromeConfirmer.new("motor").a_palindrome? == false
+p PalindromeConfirmer.new("no1, 3on").a_palindrome? == true
