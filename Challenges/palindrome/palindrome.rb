@@ -26,25 +26,40 @@
 =end
 
 class PalindromeConfirmer
+  attr_reader :ordinal_array
   VALID_RANGE = (97..122)
 
   def initialize(input)
     @input = input.downcase
+    @ordinal_array = nil
   end
 
   def is_a_palindrome?
-    return false if @input.empty? || (@input.chars.none? {|char| (VALID_RANGE === char.ord) })
-    char_ord_arr = @input.chars.map { |char| VALID_RANGE === char.ord ? char.ord : nil }.compact
+    return false if invalid_input?
+    make_ordinal_array
 
     idx1 = 0
-    idx2 = char_ord_arr.size - 1
+    idx2 = ordinal_array.size - 1
     while idx1 <= idx2
-      return false unless char_ord_arr[idx1] == char_ord_arr[idx2]
+      return false unless ordinal_array[idx1] == ordinal_array[idx2]
       idx1 += 1
       idx2 -= 1
     end
     true
   end
+
+  def invalid_input?
+    @input.empty? || (@input.chars.none? {|char| (VALID_RANGE === char.ord) })
+  end
+
+  def make_ordinal_array
+    @ordinal_array = @input.chars.map { |char| VALID_RANGE === char.ord ? char.ord : nil }.compact
+  end
 end
 
-p PalindromeConfirmer.new("%^&a").is_a_palindrome?
+p PalindromeConfirmer.new("%^&aba").is_a_palindrome? == true
+p PalindromeConfirmer.new("%^&").is_a_palindrome? == false
+p PalindromeConfirmer.new("%^&a").is_a_palindrome? == true
+p PalindromeConfirmer.new("rotor").is_a_palindrome? == true
+p PalindromeConfirmer.new("motor").is_a_palindrome? == false
+p PalindromeConfirmer.new("no1, 3on").is_a_palindrome? == true
