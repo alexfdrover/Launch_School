@@ -32,7 +32,6 @@ class PalindromeConfirmer
 
   def initialize(input)
     @input = input.downcase
-    @ordinal_array = nil
   end
 
   def a_palindrome?
@@ -50,12 +49,12 @@ class PalindromeConfirmer
   end
 
   def invalid_input?
-    @input.empty? || (@input.chars.none? { |char| (VALID_RANGE === char.ord) })
+    @input.empty? || (@input.chars.none? { |char| (VALID_RANGE.include?(char.ord)) })
   end
 
   def make_ordinal_array
     @ordinal_array = @input.chars
-                           .map { |char| VALID_RANGE === char.ord ? char.ord : nil }
+                           .map { |char| VALID_RANGE.include?(char.ord) ? char.ord : nil }
                            .compact
   end
 end
