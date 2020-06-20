@@ -5,8 +5,9 @@
   ignores all non-letter characters
   input: string
   output: boolean
-  examples: "rotor" => true, "redder" => true, "motor" => false, "no1, 3on" => true
-  structure: strings
+  examples: "rotor" => true, "redder" => true,
+            "motor" => false, "no1, 3on" => true
+  structure: character array
   algo:
   start at either end of the word
   figure out if the current character is valid
@@ -18,7 +19,7 @@
     if yes repeat process
     if no then it's not a palindrome
   if all characters evaluated then it's a palindrome
-  
+
   edge cases:
     empty string
     only non-valid characters
