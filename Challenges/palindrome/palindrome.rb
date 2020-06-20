@@ -22,7 +22,7 @@
   edge cases:
     empty string
     only non-valid characters
-    one character?
+    one character
 =end
 
 class PalindromeConfirmer
@@ -49,7 +49,9 @@ class PalindromeConfirmer
   end
 
   def invalid_input?
-    @input.empty? || (@input.chars.none? { |char| (VALID_RANGE.include?(char.ord)) })
+    @input.empty? ||
+      (@input.chars.none? { |char| (VALID_RANGE.include?(char.ord)) }) ||
+      (@input.chars.one? { |char| (VALID_RANGE.include?(char.ord)) })
   end
 
   def make_ordinal_array
@@ -61,7 +63,7 @@ end
 
 p PalindromeConfirmer.new("%^&aba").a_palindrome? == true
 p PalindromeConfirmer.new("%^&").a_palindrome? == false
-p PalindromeConfirmer.new("%^&a").a_palindrome? == true
+p PalindromeConfirmer.new("%^&a").a_palindrome? == false
 p PalindromeConfirmer.new("rotor").a_palindrome? == true
 p PalindromeConfirmer.new("motor").a_palindrome? == false
 p PalindromeConfirmer.new("no1, 3on").a_palindrome? == true
