@@ -23,14 +23,15 @@ class Translation
                    'UGA' => 'STOP' }
 
   def self.of_codon(codon)
-    LOOKUP_TABLE.fetch(codon) { fail InvalidCodonError }
+    LOOKUP_TABLE.fetch(codon) { raise InvalidCodonError }
   end
 
   def self.of_rna(strand)
     codon_arr = []
     strand.chars.each_slice(3) { |a| codon_arr << a.join }
-    codon_arr.take_while do |codon|
+    codon_arr = codon_arr.take_while do |codon|
       Translation.of_codon(codon) != 'STOP'
-    end.uniq.map { |codon| Translation.of_codon(codon) }
+    end
+    codon_arr.uniq.map { |codon| Translation.of_codon(codon) }
   end
 end
