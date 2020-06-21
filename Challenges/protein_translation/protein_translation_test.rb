@@ -35,6 +35,7 @@ class TranslationTest < Minitest::Test
       assert_equal 'Cysteine', Translation.of_codon(codon)
     end
   end
+  
   def test_identifies_Tryptophan_codons
     assert_equal 'Tryptophan', Translation.of_codon('UGG')
   end
@@ -64,7 +65,6 @@ class TranslationTest < Minitest::Test
   end
 
   def test_invalid_codons
-    skip
     strand = 'CARROT'
     assert_raises(InvalidCodonError) do
       Translation.of_rna(strand)
