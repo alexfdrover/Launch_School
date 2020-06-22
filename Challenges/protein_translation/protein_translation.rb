@@ -30,8 +30,8 @@ class Translation
     codon_arr = []
     strand.chars.each_slice(3) { |a| codon_arr << a.join }
     codon_arr = codon_arr.take_while do |codon|
-      Translation.of_codon(codon) != 'STOP'
+      of_codon(codon) != 'STOP'
     end
-    codon_arr.uniq.map { |codon| Translation.of_codon(codon) }
+    codon_arr.uniq.map { |codon| of_codon(codon) }
   end
 end
