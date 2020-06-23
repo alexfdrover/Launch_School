@@ -3,18 +3,12 @@ require 'date'
 class Meetup
   attr_accessor :date
 
-  # rubocop:disable Layout/HashAlignment
-  WEEKDAY = { monday:    :monday?,
-              tuesday:   :tuesday?,
-              wednesday: :wednesday?,
-              thursday:  :thursday?,
-              friday:    :friday?,
-              saturday:  :saturday?,
-              sunday:    :sunday? }
-
-  SCHEDULE = { first:  0, second: 1,  third:  2,
-               fourth: 3, last:   -1, teenth: (13..19) }
-  # rubocop:enable Layout/HashAlignment
+  SCHEDULE = { first: 0,
+               second: 1,
+               third: 2,
+               fourth: 3,
+               last: -1,
+               teenth: (13..19) }
 
   def initialize(month, year)
     @year = year
@@ -28,8 +22,8 @@ class Meetup
     else
       date_list = []
       while date.month == @month
-        date_list << date if date.send(WEEKDAY[weekday_symbol])
-        self.date = date.next_day
+        date_list << date if date.send("#{weekday_symbol}?")
+        self.date += 1
       end
       self.date = date_list[SCHEDULE[meetup_schedule]]
     end
@@ -39,8 +33,8 @@ class Meetup
 
   private
 
-  def teenth_logic(weekday_symbol, meetup_schedule)
-    until date.send(WEEKDAY[weekday_symbol]) && SCHEDULE[meetup_schedule].include?(date.day)
+  def teenth_logic(weekday_symbol, _)
+    until date.send("#{weekday_symbol}?") && (13..19).include?(date.day)
       self.date = date.next_day
     end
   end
