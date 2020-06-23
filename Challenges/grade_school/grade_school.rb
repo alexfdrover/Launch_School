@@ -18,13 +18,11 @@ algo
 
 class School
   def initialize
-    @school = Hash.new()
+    @school = Hash.new {|_,grade| @school[grade] = []}
   end
 
   def add(name, grade)
-    @school[grade] ||= [nil]
     @school[grade] << name
-    @school[grade].compact!
   end
 
   def to_h
@@ -35,7 +33,6 @@ class School
   end
 
   def grade(grade)
-    return [] if @school[grade].nil?
     @school[grade]
   end
 end
