@@ -11,8 +11,7 @@ class Clock
   end
 
   def to_s
-    format("%0.02d", hours.to_s) + ":" +
-      format("%0.02d", minutes.to_s)
+    format("%02d:%02d", hours.to_s, minutes.to_s)
   end
 
   def +(int)
@@ -38,7 +37,7 @@ class Clock
   def adjust_minutes
     hour_change = (minutes / 60).abs
     minute_change = (minutes / 60).abs * 60
-    
+
     if minutes >= 60
       self.hours += hour_change
       self.minutes -= minute_change
