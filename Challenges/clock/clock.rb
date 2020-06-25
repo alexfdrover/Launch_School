@@ -22,10 +22,7 @@ class Clock
   end
 
   def -(int)
-    self.minutes -= int
-    adjust_minutes
-    adjust_hours
-    self
+    self.+(-int)
   end
 
   def ==(other_clock)
