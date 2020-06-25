@@ -37,7 +37,7 @@ class PhoneNumber
   end
 
   def preprocess_number
-    @input_num = ERROR_MSG if @input_num.match?(/[^\s0-9)(-.]/)
+    @input_num = ERROR_MSG if @input_num.match?(/[^\s0-9)(.-]/)
     @input_num.gsub!(/[^0-9]/, '')
   end
 
