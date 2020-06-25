@@ -33,7 +33,7 @@ class PhoneNumber
 
   def initialize(input_num)
     @input_num = input_num
-    return ERROR_MSG if @input_num.match?(/[a-z]/i)
+    @input_num = '0000000000' if @input_num.match?(/[a-z]/i)
     preprocess_number
   end
 
@@ -45,7 +45,7 @@ class PhoneNumber
     case
     when @input_num.size == 10                          then @input_num
     when @input_num.size == 11 && @input_num[0] == '1'  then @input_num[1..-1]
-    else                                                      ERROR_MSG
+    else ERROR_MSG
     end
   end
 
@@ -54,7 +54,7 @@ class PhoneNumber
   end
 
   def to_s
-    @input_num = self.number
+    @input_num = number
     "(#{@input_num[0..2]}) #{@input_num[3..5]}-#{@input_num[6..9]}"
   end
 end
