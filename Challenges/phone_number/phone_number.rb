@@ -33,11 +33,11 @@ class PhoneNumber
 
   def initialize(input_num)
     @input_num = input_num
-    @input_num = '0000000000' if @input_num.match?(/[a-z]/i)
     preprocess_number
   end
 
   def preprocess_number
+    @input_num = ERROR_MSG if @input_num.match?(/[a-z]/i)
     @input_num.gsub!(/[^0-9]/, '')
   end
 
@@ -55,6 +55,6 @@ class PhoneNumber
 
   def to_s
     @input_num = number
-    "(#{@input_num[0..2]}) #{@input_num[3..5]}-#{@input_num[6..9]}"
+    "(#{area_code}) #{@input_num[3..5]}-#{@input_num[6..9]}"
   end
 end
