@@ -18,10 +18,8 @@ class Prime
   end
 
   def self.prime?(i)
-    3.step(by: 2, to: i) do |element|
-      if i % element == 0 && element != i
-        return false
-      end
+    3.step(by: 2, to: Math.sqrt(i)) do |element|
+      return false if i % element == 0
     end
     true
   end
