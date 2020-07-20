@@ -20,6 +20,8 @@ loop do
   puts request_line
   next if !request_line || request_line =~ /favicon/
 
+  next unless request_line
+
   http_method, path, params = parse_request(request_line)
 
   client.puts "HTTP/1.1 200 OK"
@@ -40,7 +42,7 @@ loop do
 
   client.puts "<a href='?number=#{number + 1}'>Add one </a>"
   client.puts "<a href='?number=#{number - 1}'>Minus one </a>"
-  
+
   client.puts "</body>"
   client.puts "</html>"
   client.close
