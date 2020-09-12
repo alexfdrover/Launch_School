@@ -25,9 +25,13 @@ guard clause: if start > end, swap their values
 */
 
 function substring(string, start, end) {
-  if (start > string.length || start < 0 || Number.isNaN(start) || !Number.isInteger(start)) {
+  if (start < 0 || Number.isNaN(start) || !Number.isInteger(start)) {
     start = 0;
-  } 
+  }
+
+  if (start > string.length) {
+    start = string.length;
+  }
   
   if (end > string.length || end === undefined) {
     end = string.length;
