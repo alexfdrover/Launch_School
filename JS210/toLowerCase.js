@@ -11,10 +11,10 @@ strings, numbers, loops
 algo:
 create blank string container
 for each character, check if it is within the range of 65-90 inclusive
-  (let asciiNumeric = char.charCodeAt(0)) within 65-90
+  (let currentASCIIVal = char.charCodeAt(0)) within 65-90
   if yes, perform the conversion algo and add to container
-    asciiNumeric += 32
-    char = String.fromCharCode(asciiNumeric)
+    currentASCIIVal += 32
+    char = String.fromCharCode(currentASCIIVal)
     stringContainer += char
   if no, add to container
 
@@ -22,16 +22,19 @@ return container
 */
 
 function toLowerCase(string) {
+  const CONVERSION_OFFSET = 32;
+  const asciiA = 65;
+  const asciiZ = 90;
   let stringContainer = '';
 
   for (let i = 0; i < string.length; i += 1) {
-    let asciiNumeric = string[i].charCodeAt(0);
-    if (asciiNumeric >= 65 && asciiNumeric <= 90) {
-      asciiNumeric += 32;
-      stringContainer += String.fromCharCode(asciiNumeric);
-    } else {
-      stringContainer += string[i];
+    let currentASCIIVal = string[i].charCodeAt(0);
+
+    if (currentASCIIVal >= asciiA && currentASCIIVal <= asciiZ) {
+      currentASCIIVal += CONVERSION_OFFSET;
     }
+
+    stringContainer += String.fromCharCode(currentASCIIVal);
   }
 
   return stringContainer;
