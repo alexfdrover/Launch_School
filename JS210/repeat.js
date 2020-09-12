@@ -2,8 +2,6 @@
 function repeat(string, times) {
   if (!Number.isInteger(times) || times < 0) {
     return undefined;
-  } else if (times === 0) {
-    return '';
   }
 
   let stringContainer = '';
