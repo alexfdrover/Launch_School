@@ -1,13 +1,17 @@
 
-function unshift(arr, val) {
-  for (let i = arr.length; i > 0; i -= 1) {
+function unshift(arr, ...args) {
+  let length = arr.length + args.length - 1;
+  for (let i = length; i > 0; i -= 1) {
     arr[i] = arr[i - 1];
   }
-  arr[0] = val;
+  
+  for (let j = 0; j < args.length; j += 1) {
+    arr[j] = args[j]
+  }
+
   return arr.length;
 }
 
-
-let count = [1, 2, 3];
-console.log(unshift(count, 0));      // 4
-console.log(count);                  // [ 0, 1, 2, 3 ]
+console.log(unshift([1, 2, 3], 5, 6));        // 5
+console.log(unshift([1, 2, 3]));              // 3
+console.log(unshift([4, 5], [1, 2, 3]));      // 3
