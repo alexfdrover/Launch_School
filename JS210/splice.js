@@ -1,12 +1,23 @@
 
 function splice(array, start, deleteCount, ...args) {
-  // start = start > array.length ? array.length : start;
-  // deleteCount = deleteCount > (array.length - start) ? array.length - start : deleteCount;
+  start = start > array.length ? array.length : start;
+  deleteCount = deleteCount > (array.length - start) ? array.length - start : deleteCount;
 
   const arrayCopy = array.slice(0, array.length);
   const elementCount = args.length;
+  const newLength = array.length + elementCount - deleteCount;
+  array.length = newLength;
 
-  
+  for (let i = 0; i < elementCount; i += 1) {
+    array[start + i] = args[i];
+  }
+
+  let copyBackCount = arrayCopy.length - (start + deleteCount);
+  for (let i = 0; i < copyBackCount; i += 1) {
+    array[start + elementCount + i] = arrayCopy 
+  }
+ 
+  return slice(arrayCopy, start, start + deleteCount);
 }
 
 console.log(splice([1, 2, 3], 1, 2));              // [2, 3]
