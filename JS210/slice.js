@@ -1,7 +1,7 @@
 
 function slice(array, start, end) {
-  if (start > end) [start, end] = [0, 0];
-  if (end > array.length) end = array.length
+  start = start > array.length ? array.length : start;
+  end = end > array.length ? array.length : end;
 
   let arrayContainer = [];
   for (let i = start; i < end; i += 1) {
