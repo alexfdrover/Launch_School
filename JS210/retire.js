@@ -9,5 +9,3 @@ const currentYear = today.getFullYear();
 
 console.log(`It's ${currentYear}. You will retire in ${currentYear + retirementAge - age}`);
 console.log(`You only have ${retirementAge - age} years of work to go!`);
-
-
