@@ -1,13 +1,17 @@
+function swap(words) {
+  const wordsArray = words.split(' ');
 
-function swap(sentence) {
-  let wordArray = sentence.split(' ');
-  wordArray = wordArray.map(element => {
-    return element.split('').reverse().join('');
-  });
+  for (let i = 0; i < wordsArray.length; i += 1) {
+    wordsArray[i] = swapFirstLastCharacters(wordsArray[i]);
+  }
 
-  return wordArray.join(' ');
+  return wordsArray.join(' ');
 }
 
-console.log(swap('Oh what a wonderful day it is'));  // "hO thaw a londerfuw yad ti si"
-console.log(swap('Abcde'));                          // "ebcdA"
-console.log(swap('a'));                              // "a"
+function swapFirstLastCharacters(word) {
+  if (word.length === 1) {
+    return word;
+  }
+
+  return word[word.length - 1] + word.slice(1, -1) + word[0];
+}
