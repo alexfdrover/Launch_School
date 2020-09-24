@@ -2,7 +2,7 @@
 function swap(sentence) {
   let wordArray = sentence.split(' ');
   wordArray = wordArray.map(element => {
-    element.split('').reverse().join('');
+    return element.split('').reverse().join('');
   });
 
   return wordArray.join(' ');
