@@ -1,8 +1,16 @@
 function myReduce(array, func, initial) {
-  let result = initial;
-  if (initial === undefined) result = array[0];
+  let result;
+  let index;
+
+  if (initial === undefined) {
+    result = array[0];
+    index = 1;
+  } else {
+    result = initial;
+    index = 0;
+  }
   
-  array.forEach(element => {
+  array.slice(index).forEach(element => {
     result = func(result, element);
   })
   return result;
