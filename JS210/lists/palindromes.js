@@ -17,6 +17,8 @@ function substrings(str) {
 }
 
 function isAPalindrome(str) {
+  if (str.length <= 1) return false;
+  
   for (let i = 0; i < str.length / 2; i += 1) {
     if (str[i] !== str[str.length - (i + 1)]) return false;
   }
@@ -25,13 +27,7 @@ function isAPalindrome(str) {
 }
 
 function palindromes(str) {
-  let palindromeList = [];
-
-  substrings(str).forEach(substr => {
-    if (isAPalindrome(substr) && substr.length > 1) palindromeList.push(substr);
-  });
-
-  return palindromeList;
+  return substrings(str).filter(isAPalindrome);
 }
 
 console.log(palindromes('abcd'));       // []
