@@ -59,7 +59,18 @@ function generateClassRecordSummary(scores) {
     return `${gradeNumber} (${gradeLetter})`;
   }
 
+  function generateExamStats(examVals) {
+    let minimum = examVals.reduce((min, ele) => ele < min ? ele : min);
+    let maximum = examVals.reduce((max, ele) => ele > max ? ele : max);
+    let average = examVals.reduce((sum, ele) => sum += ele) / examVals.length;
+    return { average,
+             minimum,
+             maximum,
+    };
+  }
+
   const EXAM_WEIGHT = 0.65;
+  const NUM_OF_EXAMS = 4;
   let studentGrades = [];
   let exams = [];
 
@@ -71,18 +82,19 @@ function generateClassRecordSummary(scores) {
     studentGrades.push(generateStudentGrade(weightedGrade));
   });
   
-  
+  for (let i = 0; i < NUM_OF_EXAMS; i += 1) {
+    let currentExamValues = [];
+    students.forEach(student => {
+      currentExamValues.push(scores[student].scores.exams[i]);
+    })
+
+    exams.push(generateExamStats(currentExamValues));
+  }
+
+  return {
+    studentGrades,
+    exams,
+  };
 }
 
 console.log(generateClassRecordSummary(studentScores));
-
-// returns:
-// {
-//   studentGrades: [ '87 (B)', '73 (D)', '84 (C)', '86 (B)', '56 (F)' ],
-//   exams: [
-//     { average: 75.6, minimum: 50, maximum: 100 },
-//     { average: 86.4, minimum: 70, maximum: 100 },
-//     { average: 87.6, minimum: 60, maximum: 100 },
-//     { average: 91.8, minimum: 80, maximum: 100 },
-//   ],
-// }
