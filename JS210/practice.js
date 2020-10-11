@@ -1,9 +1,13 @@
-let student = {
-  firstName: 'Alex',
-  lastName: 'Drover',
-  semester: 'Autumn',
-  dateOfBirth: new Date('September 28, 1993'),
-  grades: {math: 90, physics: 95, english: 98},
+function iterate(array, callback) {
+  for (let i = 0; i < array.length; i += 1) {
+    callback(array[i]);
+  }
+}
+
+let methods = {
+   foo: function () {
+     console.log('hello');
+   },
 };
 
-console.log(student);
+iterate([1, 2, 3], methods.foo);
