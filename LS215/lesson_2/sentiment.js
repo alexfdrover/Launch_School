@@ -39,6 +39,7 @@ let textExcerpt = 'To be or not to be-that is the question:\n' +
 
 function sentiment(text) {
   function outputResults(positiveArray, negativeArray) {
+    let sentiment;
     console.log(`There are positive ${positiveArray.length} words in the text.`);
     console.log(`Positive sentiments: ${positiveArray.join(', ')}\n`);
     
@@ -46,18 +47,20 @@ function sentiment(text) {
     console.log(`Negative sentiments: ${negativeArray.join(', ')}\n`);
     
     if (positiveArray.length - negativeArray.length > 0) {
-      console.log('The overall sentiment of the text is Positive');
+      sentiment = 'Positive';
     } else if (positiveArray.length - negativeArray.length < 0) {
-      console.log('The overall sentiment of the text is Negative');
+      sentiment = 'Negative';
     } else {
-      console.log('The overall sentiment of the text is Neutral');
+      sentiment = 'Neutral';
     }
+
+    console.log(`The overall sentiment of the text is ${sentiment}`);
   }
 
   let positiveWordHits = [];
   let negativeWordHits = [];
 
-  text = text.replace(/[^a-z]/gi, ' ');
+  text = text.replace(/[^a-z]/gi, ' ').toLowerCase();
   wordsList = text.split(' ');
   wordsList.forEach(word => {
     if (positiveWords.includes(word)) {
