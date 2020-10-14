@@ -1,5 +1,5 @@
-let positiveWords = ['fortune', 'dream', 'love', 'respect', 'patience', 'devout', 'noble', 'resolution'];
-let negativeWords = ['die', 'heartache', 'death', 'despise', 'scorn', 'weary', 'trouble', 'oppress'];
+let positiveRegex = /\bfortunes?\b|\bdream(s|t|ed)?\b|love(s|d)?\b|respect(s|ed)?\b|\bpatien(ce|t)?\b|\bdevout(ly)?\b|\bnobler?\b|\bresolut(e|ion)?\b/gi;
+let negativeRegex = /\bdie(s|d)?\b|\bheartached?\b|death|despise(s|d)?\b|\bscorn(s|ed)?\b|\bweary\b|\btroubles?\b|\boppress(es|ed|or('s)?)?\b/gi;
 
 let textExcerpt = 'To be or not to be-that is the question:\n' +
   'Whether \'tis nobler in the mind to suffer\n' +
@@ -63,9 +63,9 @@ function sentiment(text) {
   text = text.replace(/[^a-z]/gi, ' ').toLowerCase();
   wordsList = text.split(' ');
   wordsList.forEach(word => {
-    if (positiveWords.includes(word)) {
+    if (word.match(positiveRegex)) {
       positiveWordHits.push(word);
-    } else if (negativeWords.includes(word)) {
+    } else if (word.match(negativeRegex)) {
       negativeWordHits.push(word);
     }
   });
