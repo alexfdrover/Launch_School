@@ -63,4 +63,8 @@ function isBlockWord(str) {
 console.log(isBlockWord('BATCH'));      // true
 console.log(isBlockWord('BUTCH'));      // false
 console.log(isBlockWord('jest'));       // true
-console.log(isBlockWord('hel'));        // true
+console.log(isBlockWord('floW'));       // true
+console.log(isBlockWord('APPLE'));      // false
+console.log(isBlockWord('apple'));      // false
+console.log(isBlockWord('apPLE'));      // false
+console.log(isBlockWord('Box'));        // false
