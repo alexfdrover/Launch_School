@@ -15,9 +15,9 @@ data:
   array of subarrays
 algo:
   /if word length > 13, return false
-  /break word into letters
-  /for each letter, check for duplicate letters in word
-    /if duplicate letters, return false
+  /break word into stringLetters
+  /for each letter, check for duplicate stringLetters in word
+    /if duplicate stringLetters, return false
   /for each block, check if the letter array contains both sides
     /if so, return false
   /return true
@@ -42,19 +42,19 @@ function isBlockWord(str) {
     13: ['H', 'U'],
   };
 
-  let letters = str.toUpperCase().split('');
+  let stringLetters = str.toUpperCase().split('');
   for (let i = 0; i < str.length; i += 1) {
-    let letterCount = letters.reduce((tally, char) => {
-      return letters[i] === char ? tally + 1 : tally;
+    let letterCount = stringLetters.reduce((tally, char) => {
+      return stringLetters[i] === char ? tally + 1 : tally;
     }, 0);
     if (letterCount > 1) return false;
   }
 
   let blockKeys = Object.keys(blocks);
-  for (let i = 0; i < Object.keys(blocks).length; i += 1) {
+  for (let i = 0; i < blockKeys.length; i += 1) {
     let blockSide1 = blocks[blockKeys[i]][0];
     let blockSide2 = blocks[blockKeys[i]][1];
-    if (letters.includes(blockSide1) && letters.includes(blockSide2)) return false;
+    if (stringLetters.includes(blockSide1) && stringLetters.includes(blockSide2)) return false;
   }
 
   return true;
