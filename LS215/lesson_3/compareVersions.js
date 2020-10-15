@@ -28,11 +28,11 @@ algo:
 */
 
 function compareVersions(version1, version2) {
-  let regex = /[^0-9.]/g;
-  if (regex.test(version1) || regex.test(version2)) return null;
+  let regexValidChars = /^[0-9]+(\.[0-9]+)*$/;
+  if (!regexValidChars.test(version1) || !regexValidChars.test(version2)) return null;
 
-  let v1StringArray = version1.split('.');
-  let v2StringArray = version2.split('.');
+  let v1StringArray = version1.split('.').map(Number);
+  let v2StringArray = version2.split('.').map(Number);
   let lengthDifference = v1StringArray.length - v2StringArray.length;
 
   if (lengthDifference > 0) {
@@ -57,11 +57,13 @@ function compareVersions(version1, version2) {
 
   return 0;
 }
-
-console.log(compareVersions('0.1', '1'));                 // -1
-console.log(compareVersions('1', '1.0'));                 // 0
-console.log(compareVersions('1.0', '1.1'));               // -1
-console.log(compareVersions('1.1', '1.2'));               // -1
-console.log(compareVersions('1.2', '1.2.0.0'));           // 0
-console.log(compareVersions('1.2.0.0', '1.18.2'));        // -1
-console.log(compareVersions('1.18.2', '13.37'));          // -1
+console.log(compareVersions('1', '1'));            // 0
+console.log(compareVersions('1.1', '1.0'));        // 1
+console.log(compareVersions('2.3.4', '2.3.5'));    // -1
+console.log(compareVersions('1.a', '1'));          // null
+console.log(compareVersions('.1', '1'));           // null
+console.log(compareVersions('1.', '2'));           // null
+console.log(compareVersions('1..0', '2.0'));       // null
+console.log(compareVersions('1.0', '1.0.0'));      // 0
+console.log(compareVersions('1.0.0', '1.1'));      // -1
+console.log(compareVersions('1.0', '1.0.5'));      // -1
