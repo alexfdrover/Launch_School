@@ -34,6 +34,15 @@ push it to the string container
 */
 
 function caesarEncrypt(msg, offset) {
+  function adjustOffset(charIndex, offset) {
+    result = charIndex + offset
+    while (result > 26) {
+      result -= 26;
+    }
+
+    return result;
+  }
+
   let newString = '';
   const lowercase = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
   const uppercase = lowercase.map(ele => ele.toUpperCase());
@@ -43,11 +52,11 @@ function caesarEncrypt(msg, offset) {
     let charIndex;
     if (lowercase.indexOf(char) !== -1) {
       charIndex = lowercase.indexOf(char);
-      charIndex = charIndex + offset > 25 ? charIndex + offset - 26 : charIndex + offset;
+      charIndex = charIndex + offset > 25 ? adjustOffset(charIndex, offset) : charIndex + offset;
       newString = newString.concat('', lowercase[charIndex]);
     } else if (uppercase.indexOf(char) !== -1) {
         charIndex = uppercase.indexOf(char);
-        charIndex = charIndex + offset > 25 ? charIndex + offset - 26 : charIndex + offset;
+        charIndex = charIndex + offset > 25 ? adjustOffset(charIndex, offset) : charIndex + offset;
         newString = newString.concat('', uppercase[charIndex]);
       }
      else {
@@ -57,6 +66,7 @@ function caesarEncrypt(msg, offset) {
 
   return newString;
 }
+
 
 // simple shift
 console.log(caesarEncrypt('A', 0));       // "A"
@@ -75,3 +85,5 @@ console.log(caesarEncrypt('The quick brown fox jumps over the lazy dog!', 5));
 // many non-letters
 console.log(caesarEncrypt('There are, as you can see, many punctuations. Right?; Wrong?', 2));
 // "Vjgtg ctg, cu aqw ecp ugg, ocpa rwpevwcvkqpu. Tkijv?; Ytqpi?"
+/*
+*/
