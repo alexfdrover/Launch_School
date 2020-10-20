@@ -1,15 +1,3 @@
-/*
-problem
-input: message, keyword
-output: message with characters shifted by appropriate amount
-
-algo
-/extract only the alpha characters from the message
-/split extraction into segments that are the same length as the keyword
-/for each segment
-  /shift each character by an amount equal to the num-representation of the equivalent index character in the keyword
-/map shifted characters back onto only the alpha characters
-*/
 
 function vigenere(msg, keyword) {
   const alpha = "abcdefghijklmnopqrstuvwxyz";
