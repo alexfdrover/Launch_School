@@ -1,7 +1,7 @@
 function wordToDigit(str) {
   let numbers = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
   numbers.forEach(number => {
-    let regex = new RegExp(number, 'g');
+    let regex = new RegExp('\\b' + number + '\\b', 'g');
     str = str.replace(regex, numbers.indexOf(number));
   });
 
