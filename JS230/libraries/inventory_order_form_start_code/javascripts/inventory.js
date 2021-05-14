@@ -9,8 +9,9 @@ var inventory;
       document.querySelector('#order_date').textContent = date.toUTCString();
     },
     cacheTemplate: function() {
-      var $iTmpl = $("#inventory_item").remove();
-      this.template = $iTmpl.html();
+      let inventoryItem = document.getElementById('inventory_item');
+      this.template = inventoryItem.innerHTML;
+      inventoryItem.remove();
     },
     add: function() {
       this.lastId++;
