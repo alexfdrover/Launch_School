@@ -75,10 +75,10 @@ var inventory;
     },
     bindEvents: function() {
       let addItem = document.getElementById('add_item');
-      addItem.addEventListener('click', $.proxy(this.newItem, this));
+      addItem.addEventListener('click', this.newItem.bind(this));
 
-      $("#inventory").on("click", "a.delete", $.proxy(this.deleteItem, this));
-      $("#inventory").on("blur", ":input", $.proxy(this.updateItem, this));
+      $("#inventory").on("click", "a.delete", this.deleteItem.bind(this));
+      $("#inventory").on("blur", ":input", this.updateItem.bind(this));
     },
     init: function() {
       this.setDate();
@@ -88,4 +88,4 @@ var inventory;
   };
 })();
 
-$($.proxy(inventory.init, inventory));
+$(inventory.init.bind(inventory));
