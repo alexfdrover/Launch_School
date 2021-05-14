@@ -6,7 +6,7 @@ var inventory;
     collection: [],
     setDate: function() {
       var date = new Date();
-      $("#order_date").text(date.toUTCString());
+      document.querySelector('#order_date').textContent = date.toUTCString();
     },
     cacheTemplate: function() {
       var $iTmpl = $("#inventory_item").remove();
@@ -74,7 +74,9 @@ var inventory;
       this.update($item);
     },
     bindEvents: function() {
-      $("#add_item").on("click", $.proxy(this.newItem, this));
+      let addItem = document.getElementById('add_item');
+      addItem.addEventListener('click', $.proxy(this.newItem, this));
+
       $("#inventory").on("click", "a.delete", $.proxy(this.deleteItem, this));
       $("#inventory").on("blur", ":input", $.proxy(this.updateItem, this));
     },
