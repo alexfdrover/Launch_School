@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', event => {
   const guesses = document.querySelector('#guesses');
   const apples = document.querySelector('#apples');
   const replay = document.querySelector('#replay');
+  const LOSE_MESSAGE = 'Game Over! Play again?';
+  const WIN_MESSAGE = "You won! Play again?";
 
 
   let randomWord = (function () {
@@ -16,6 +18,18 @@ document.addEventListener('DOMContentLoaded', event => {
     };
   })();
 
+  function keyUpListener(event) {
+      let keyPressedCode = event.keyCode;
+      if (keyPressedCode >= 65 && keyPressedCode <= 90) {
+        game.addLetter(event.key);
+      }
+  }
+
+  function replayListener(event) {
+    event.preventDefault();
+    this.gameReset();
+  }
+
   function Game() {
     this.incorrect = 0;
     this.letters_guessed = [];
@@ -23,9 +37,11 @@ document.addEventListener('DOMContentLoaded', event => {
     this.word = randomWord();
     if (!this.word) {
       this.displayMessage("Sorry, I've run out of words!");
+      this.removeListeners();
       return this;
     }
     this.word = this.word.split("");
+    this.MAX_GUESSES = 6;
     this.init();
   }
 
@@ -42,11 +58,67 @@ document.addEventListener('DOMContentLoaded', event => {
     },
     init() {
       this.createBlanks();
+      document.addEventListener('keyup', keyUpListener);
+      replay.addEventListener('click', replayListener.bind(this));
     },
     displayMessage(text) {
-      message.text = text;
-    }
+      message.innerHTML = text;
+    },
+    addLetter(letter) {
+      if (!this.letters_guessed.includes(letter)) {
+        this.letters_guessed.push(letter);
+        this.makeGuess(letter);
+      }
+    },
+    makeGuess(letter) {
+      if (!this.word.includes(letter)) {
+        this.wrongGuess();
+      } else {
+        this.rightGuess(letter);
+      }
+    },
+    wrongGuess() {
+      if (this.incorrect < this.MAX_GUESSES) {
+        this.incorrect += 1;
+        apples.className = `guess_${this.incorrect}`;
+        if (this.incorrect === this.MAX_GUESSES) this.triggerLoseState();
+      }
+    },
+    triggerLoseState() {
+      message.innerHTML = LOSE_MESSAGE;
+      this.removeListeners();
+    },
+    rightGuess(letter) {
+      if (this.correct_spaces < this.word.length) {
+        this.correct_spaces += this.word.filter(char => char === letter).length;
+        this.updateLetters(letter);
+        if (this.correct_spaces === this.word.length) this.triggerWinState();
+      }
+    },
+    updateLetters(letter) {
+      let slots = letters.querySelectorAll('span');
+      this.word.forEach((char, idx) => {
+        if (char === letter) slots[idx].innerHTML = letter.toUpperCase();
+      });
+
+    },
+    triggerWinState() {
+      message.innerHTML = WIN_MESSAGE;
+      this.removeListeners();
+    },
+    removeListeners() {
+      document.removeEventListener('keyup', keyUpListener);
+      replay.removeEventListener('click', replayListener);
+    },
+    gameReset() {
+      this.removeListeners();
+      message.innerHTML = '';
+      apples.className = '';
+      game = new Game();
+    },
   };
 
-  new Game();
+  
+
+  let game = new Game();
 });
