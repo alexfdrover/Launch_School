@@ -48,6 +48,32 @@ document.addEventListener('DOMContentLoaded', () => {
     })[0];
 
     photoInfo.insertAdjacentHTML('beforeend', photoInformationTemplate(photo));
+    addButtonHandlers();
+  }
+
+  function addButtonHandlers() {
+    photoInfo.addEventListener("click", function(e) {
+      e.preventDefault();
+      let button = e.target;
+      let buttonType = button.getAttribute("data-property");
+      if (buttonType) {
+        let href = button.getAttribute("href");
+        let dataId = button.getAttribute("data-id");
+        let text = button.textContent;
+    
+        fetch(href, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+          },
+          body: 'photo_id=' + dataId
+        })
+        .then(response => response.json())
+        .then(json => {
+          button.textContent = text.replace(/\d+/, json.total);
+        });
+      }
+    });
   }
 
   function renderComments(comments) {
