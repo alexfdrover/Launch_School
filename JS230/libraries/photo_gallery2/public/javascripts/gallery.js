@@ -1,7 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const slideshow = document.getElementById('slideshow');
   const slides = document.getElementById('slides');
-  const comments = document.getElementById('comments');
   const form = document.querySelector('form');
   const photoInfo = document.querySelector('section > header');
 
@@ -13,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
   let photosTemplate = Handlebars.compile(photosTemplateId.innerHTML);
   let photoInformationTemplate = Handlebars.compile(photoInformationTemplateId.innerHTML);
   let photoCommentsTemplate = Handlebars.compile(photoCommentsTemplateId.innerHTML);
-  let photoCommentTemplate = Handlebars.compile(photoCommentTemplateId.innerHTML);
 
   Handlebars.registerPartial('photo_comment', photoCommentTemplateId.innerHTML);
   
@@ -48,7 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
     })[0];
 
     photoInfo.insertAdjacentHTML('beforeend', photoInformationTemplate(photo));
-    addButtonHandlers();
   }
 
   function addButtonHandlers() {
@@ -128,4 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
     renderPhotoInformation(photos[currentIndex].id);
     getCommentsFor(photos[currentIndex].id);
   });
+
+  addButtonHandlers();
 });
