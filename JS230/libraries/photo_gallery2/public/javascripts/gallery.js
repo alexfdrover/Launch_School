@@ -77,15 +77,27 @@ document.addEventListener('DOMContentLoaded', () => {
     ul.innerHTML = '';
   }
 
+  function toggleState(newState) {
+    let currentPhoto = document.querySelector(`[data-id="${currentIndex+1}"]`);
+    let oldState = newState === 'show' ? 'hide' : 'show';
+
+    currentPhoto.classList.remove(oldState);
+    currentPhoto.classList.add(newState);
+  }
+
   document.querySelector('.prev').addEventListener('click', event => {
+    toggleState('hide');
     decrementPhotoIdx();
+    toggleState('show');
     clearDisplay()
     renderPhotoInformation(photos[currentIndex].id);
     getCommentsFor(photos[currentIndex].id);
   });
   
   document.querySelector('.next').addEventListener('click', event => {
+    toggleState('hide');
     incrementPhotoIdx();
+    toggleState('show');
     clearDisplay()
     renderPhotoInformation(photos[currentIndex].id);
     getCommentsFor(photos[currentIndex].id);
