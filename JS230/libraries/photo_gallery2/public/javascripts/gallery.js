@@ -18,7 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
   Handlebars.registerPartial('photo_comment', photoCommentTemplateId.innerHTML);
   
   let photos;
-  
+  let currentIndex = 0;
+
   fetch('/photos')
     .then(response => response.json())
     .then(json => {
@@ -53,4 +54,40 @@ document.addEventListener('DOMContentLoaded', () => {
     let ul = document.querySelector('#comments > ul');
     ul.insertAdjacentHTML('beforeend', photoCommentsTemplate({comments: comments}));
   }
+
+  function decrementPhotoIdx() {
+    if (currentIndex === 0) {
+      currentIndex = photos.length - 1;
+    } else {
+      currentIndex -= 1;
+    }
+  }
+  
+  function incrementPhotoIdx() {
+    if (currentIndex === photos.length - 1) {
+      currentIndex = 0;
+    } else {
+      currentIndex += 1;
+    }
+  }
+
+  function clearDisplay() {
+    photoInfo.innerHTML = '';
+    let ul = document.querySelector('#comments > ul');
+    ul.innerHTML = '';
+  }
+
+  document.querySelector('.prev').addEventListener('click', event => {
+    decrementPhotoIdx();
+    clearDisplay()
+    renderPhotoInformation(photos[currentIndex].id);
+    getCommentsFor(photos[currentIndex].id);
+  });
+  
+  document.querySelector('.next').addEventListener('click', event => {
+    incrementPhotoIdx();
+    clearDisplay()
+    renderPhotoInformation(photos[currentIndex].id);
+    getCommentsFor(photos[currentIndex].id);
+  });
 });
