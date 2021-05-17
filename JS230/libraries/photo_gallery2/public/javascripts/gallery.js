@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let photosTemplate = Handlebars.compile(photosTemplateId.innerHTML);
   let photoInformationTemplate = Handlebars.compile(photoInformationTemplateId.innerHTML);
   let photoCommentsTemplate = Handlebars.compile(photoCommentsTemplateId.innerHTML);
-
+  let photoCommentTemplate = Handlebars.compile(photoCommentTemplateId.innerHTML);
   Handlebars.registerPartial('photo_comment', photoCommentTemplateId.innerHTML);
   
   let photos;
@@ -126,4 +126,26 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   addButtonHandlers();
+
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    let href = form.getAttribute('action');
+    let data = new FormData(form);
+    let currentSlideId = document.querySelector('.show') || document.querySelector('#slides figure');
+    data.set('photo_id', currentSlideId);
+
+    fetch(href, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      },
+      body: new URLSearchParams([...data])
+    })
+      .then(response => response.json())
+      .then(json => {
+        let commentsList = document.querySelector('#comments ul');
+        commentsList.insertAdjacentHTML('beforeend', photoCommentTemplate(json));
+        form.reset();
+      });
+  });
 });
