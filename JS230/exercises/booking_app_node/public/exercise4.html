@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <main>
+    <h1>Schedules</h1>
+    <form method='post' action='/api/bookings'>
+      <dl>
+        <dt>
+          <label for='schedules'>Please select one schedule</label>
+        </dt>
+        <dd>
+          <select name='id' id=id>
+            <option value=''>Please Choose An Option</option>
+          </select>
+        </dd>
+        <dt>
+          <label for='email'>Email:</label>
+        </dt>
+        <dd>
+          <input type='email' name='email' id='email'>
+        </dd>
+      </dl>
+      <input type="submit">
+
+    </form>
+  </main>
+
+  <script src="./javascripts/exercise4.js"></script>
+</body>
+</html>
