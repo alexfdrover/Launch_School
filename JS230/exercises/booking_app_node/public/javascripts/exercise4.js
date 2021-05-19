@@ -122,10 +122,33 @@ document.addEventListener('DOMContentLoaded', function() {
         
         formSubmitRequest.addEventListener('load', event => {
           switch (formSubmitRequest.status) {
+            case 204:
+              alert('Booked');
+              window.location.href = "./exercise4.html";
+              break;
             case 404:
               alert(formSubmitRequest.responseText);
               let bookingSequence = formSubmitRequest.responseText.split(':')[1].trim();
               showBookingTemplate({email: form['email'].value, bookingSequence});
+              let newStudentForm = document.getElementById('newStudentForm');
+              newStudentForm.addEventListener('submit', event => {
+                event.preventDefault();
+                let formData2 = new FormData(newStudentForm);
+                let json2 = JSON.stringify(formDataToJSON(formData2));
+
+                let xhr = new XMLHttpRequest();
+                xhr.open('POST', newStudentForm.action);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.send(json2);
+                xhr.addEventListener('load', event => {
+                  alert(xhr.responseText);
+                  if (xhr.status === 201) {
+                    newStudentForm.reset();
+                    formData.set('email', formData2.get('email'));
+                    form.dispatchEvent(new Event('submit', { cancelable: true }));
+                  }
+                });
+              });
               break;
           }
         });
