@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <main>
+    <form id="selection-filters" method="post" action="#">
+      <select id="animal-classifications">
+        <option value="Classifications" selected>Classifications</option>
+        <option value="Vertebrate">Vertebrate</option>
+        <option value="Warm-blooded">Warm-blooded</option>
+        <option value="Cold-blooded">Cold-blooded</option>
+        <option value="Mammal">Mammal</option>
+        <option value="Bird">Bird</option>
+      </select>
+      <select id="animals">
+        <option value="Animals" selected>Animals</option>
+        <option value="Bear">Bear</option>
+        <option value="Turtle">Turtle</option>
+        <option value="Whale">Whale</option>
+        <option value="Salmon">Salmon</option>
+        <option value="Ostrich">Ostrich</option>    
+      </select>
+      <button id="clear">Clear</button>  
+    </form>
+  </main>
+
+  <script>
+    let classifications = {
+      Vertebrate: ['Bear', 'Turtle', 'Whale', 'Salmon', 'Ostrich'],
+      'Warm-blooded': ['Bear', 'Whale', 'Ostrich'],
+      'Cold-blooded': ['Salmon', 'Turtle'],
+      Mammal: ['Bear', 'Whale'],
+      Bird: ['Ostrich'],
+    };
+
+    let classes = Object.keys(classifications);
+    let allAnimals = Object.values(classifications).flat();
+    let allUniqueAnimals = allAnimals.filter((animal, index) => {
+      return allAnimals.indexOf(animal) === index;
+    });
+
+    function hideTarget(option) {
+      option.style.display = 'none';
+    }
+
+    function reset() {
+      let classChildren = document.getElementById('animal-classifications').children;
+      for (let i = 0; i < classChildren.length; i += 1) {
+        classChildren[i].style.removeProperty('display');
+      }
+  
+      let animalChildren = document.getElementById('animals').children;
+      for (let i = 0; i < animalChildren.length; i += 1) {
+        animalChildren[i].style.removeProperty('display');
+      }
+    }
+  
+    let animalClassifications = document.getElementById('animal-classifications');
+    let animals = document.getElementById('animals');
+    let clearBtn = document.getElementById('clear');
+
+    animalClassifications.addEventListener('change', event => {
+      reset();
+      let animalsToShow = classifications[event.target.value];
+      allUniqueAnimals.forEach(animal => {
+        if (!animalsToShow.includes(animal)) {
+          let element = document.querySelector(`option[value="${animal}"]`);
+          hideTarget(element);
+        }
+      });
+    });
+
+    animals.addEventListener('change', event => {
+      reset();
+      let animal = event.target.value;
+      let categoriesToShow = classes.filter(category => {
+        return !classifications[category].includes(animal);
+      });
+      categoriesToShow.forEach(category => {
+        let element = document.querySelector(`option[value="${category}"]`);
+        hideTarget(element);
+      });
+    });
+
+    clearBtn.addEventListener('submit', event => {
+      event.preventDefault();
+      reset();
+    });
+
+  </script>
+</body>
+</html>
