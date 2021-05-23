@@ -10,8 +10,9 @@ const cars = [
 
 class App {
   constructor() {
-    this.renderOptions();
+    this.renderOptions(cars);
     this.renderImages(cars);
+    this.addListeners();
   }
 
   clearImages() {
@@ -45,7 +46,7 @@ class App {
     });
   }
 
-  renderOptions() {
+  renderOptions(cars) {
     cars.forEach(car => {
       ['make', 'model', 'price', 'year'].forEach(choice => {
         let value = car[`${choice}`]
@@ -59,8 +60,17 @@ class App {
         }
       });
     });
+  }
 
-    this.addListeners();
+  clearOptions() {
+    let options = document.querySelectorAll('option');
+    options.forEach(option => {
+      if (option.closest('select').getAttribute('name') === 'make') {
+
+      } else if (option.value !== 'All') {
+        option.remove();
+      }
+    });
   }
 
   filterOptions(make, model, price, year) {
@@ -73,9 +83,9 @@ class App {
       if (carModel === 'All') carModel = car.model;
       if (carPrice === 'All') carPrice = car.price;
       if (carYear === 'All') carYear = car.year;
-      return carMake === car.make && carModel === car.model && carPrice === car.price && carYear === car.year;
+      return carMake == car.make && carModel == car.model && carPrice == car.price && carYear == car.year;
     });
-    this.renderImages(results);
+    return results;
   }
 
   addListeners() {
@@ -87,8 +97,19 @@ class App {
         let modelVal = document.querySelector('#model > select').value;
         let priceVal = document.querySelector('#price > select').value;
         let yearVal = document.querySelector('#year > select').value;
-        this.filterOptions(makeVal, modelVal, priceVal, yearVal);
+        let results = this.filterOptions(makeVal, modelVal, priceVal, yearVal);
+        this.renderImages(results);
       }
+    });
+
+    let make = document.querySelector('select[name="make"]');
+    make.addEventListener('change', event => {
+      let modelVal = document.querySelector('#model > select').value;
+      let priceVal = document.querySelector('#price > select').value;
+      let yearVal = document.querySelector('#year > select').value;
+      let results = this.filterOptions(make.value, modelVal, priceVal, yearVal);
+      this.clearOptions();
+      this.renderOptions(results);
     });
   }
 }
