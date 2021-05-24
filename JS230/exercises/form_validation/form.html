@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form</title>
+  <style>
+    html, button {
+      background-color: #52be43;
+      color: white;
+    }
+    button {
+      border: none;
+      border-radius: 4px;
+      margin-top: 20px;
+      padding: 5px 15px;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+    h1 {
+      width: 50%;
+      margin: 0 auto;
+      font-size: 24px;
+    }
+    form {
+      width: 50%;
+      margin: 0 auto;
+      margin-top: 15px;
+      background-color: white;
+      color: black;
+      border-radius: 5px;
+      font-size: 1.2rem;
+      padding-top: 20px;
+    }
+    fieldset {
+      border: none;
+    }
+    dd {
+      margin: 0;
+    }
+    dt {
+      padding: 20px 0px 5px 0px;
+    }
+    h1 {
+      margin-top: 70px;
+    }
+    input {
+      width: 300px;
+      height: 38px;
+      padding: 3px 10px;
+      outline: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+    }
+    span {
+      margin-left: 30px;
+    }
+    .error-message {
+      color: #A93333;
+      opacity: 0;
+    }
+    .invalid_field {
+      border-color: #A93333;
+    }
+    p {
+      color: #A93333;
+      opacity: 0;
+    }
+    .valid_field {
+      border-color: #52be43;
+    }
+  </style>
+</head>
+<body>
+  <h1>Sign Up Form</h1>
+  <form method='POST' action='#' novalidate>
+    <fieldset>
+      <p>Form cannot be submitted until errors are corrected.</p>
+      <dl>
+        <dt><label for='firstName'>First Name</label></dt>
+        <dd>
+          <input type='text' id='firstName' name='firstName' required>
+          <span class='error-message'>First Name is a required field.</span>
+        </dd>
+
+        <dt><label for='lastName'>Last Name</label></dt>
+        <dd>
+          <input type='text' id='lastName' name='lastName' required>
+          <span class='error-message'>Last Name is a required field.</span>
+        </dd>
+
+        <dt><label for='email'>Email</label></dt>
+        <dd>
+          <input type='email' id='email' name='email' placeholder="someone@example.com" required>
+          <span class='error-message'>Email is a required field.</span>
+        </dd>
+
+        <dt><label for='password'>Password</label></dt>
+        <dd>
+          <input type='password' id='password' name='password' minlength="10" required>
+          <span class='error-message'>Password is a required field.</span>
+        </dd>
+
+        <dt><label for='tel'>Phone Number</label></dt>
+        <dd>
+          <input type='tel' id='tel' name='tel' placeholder="555-555-5555">
+          <span class='error-message'>Please enter a valid phone number.</span>
+        </dd>
+
+        <button type='submit'>Sign Up</button>
+      </dl>
+    </fieldset>
+  </form>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', event => {
+      function checkIfValid(value, type) {
+        let result;
+        switch (type) {
+          case 'text':
+            result = value.length > 0;
+            break;
+          case 'email':
+            result = /.+@.+/.test(value);
+            break;
+          case 'password':
+            result = value.length >= 10;
+            break;
+          case 'tel':
+            result = /[0-9]{3}-[0-9]{3}-[0-9]{4}/.test(value);
+            if (value === '') result = true;
+            break;
+          default:
+            break;
+        }
+        return result;
+      }
+      
+      function validateInput(target) {
+        let isValid = checkIfValid(target.value, target.getAttribute('type'));
+        inputErrMsgHandler(isValid, target);
+      }
+
+      function inputErrMsgHandler(validity, target) {
+        if (validity) {
+          target.classList.remove('invalid_field');
+          target.classList.add('valid_field');
+          target.nextElementSibling.style['opacity'] = 0;
+        } else {
+          target.classList.remove('valid_field');
+          target.classList.add('invalid_field');
+          target.nextElementSibling.style['opacity'] = 1;
+        }
+      }
+
+      function formErrMsgHandler() {
+        let p = document.querySelector('p');
+        let errorMessages = document.querySelectorAll('.error-message');
+        let errMsgArr = Array.prototype.slice.call(errorMessages);
+        
+        let inputErrsFound = errMsgArr.some(msg => {
+          return msg.style.opacity > 0;
+        });
+
+        inputErrsFound ? p.style.opacity = 1 : p.style.opacity = 0;
+      }
+
+      function validateAllInputs() {
+        let inputs = document.querySelectorAll('input');
+        let inputArr = Array.prototype.slice.call(inputs);
+        inputArr.forEach(input => {
+          validateInput(input);
+        });
+      }
+
+      let form = document.querySelector('form');
+      form.addEventListener('focusout', ({target}) => {
+        if (target.tagName === 'BUTTON') return;
+        validateInput(target);
+      });
+
+      form.addEventListener('submit', event => {
+        event.preventDefault();
+        validateAllInputs();
+        formErrMsgHandler();
+      });
+    });
+  </script>
+</body>
+</html>
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
