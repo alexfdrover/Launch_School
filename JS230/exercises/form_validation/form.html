@@ -209,7 +209,9 @@
         if (id === 'firstName' || id === 'lastName') {
           if (!/[a-zA-Z'\s]/.test(event.key)) event.preventDefault();
         } else if (event.target.classList.contains('cc')) {
-          if (!/[0-9]/.test(event.key) && (event.key !== 'Backspace')) event.preventDefault();
+          let permittedKeys = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight'];
+          if (!/[0-9]/.test(event.key) && !permittedKeys.includes(event.key)) event.preventDefault();
+          if (event.target.value.length === 4 && !permittedKeys.includes(event.key)) event.target.nextElementSibling.focus();
         }
       });
     });
