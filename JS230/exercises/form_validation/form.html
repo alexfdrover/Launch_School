@@ -75,6 +75,10 @@
     .valid_field {
       border-color: #52be43;
     }
+    .submittedForm > p{
+      opacity: 1;
+      color: black;
+    }
   </style>
 </head>
 <body>
@@ -115,10 +119,10 @@
         
         <dt><label for='cc'>Credit Card</label></dt>
         <dd>
-          <input type='cc' id='cc1' class='cc' name='cc' placeholder="xxxx" maxlength="4" required> -
-          <input type='cc' id='cc2' class='cc' name='cc' placeholder="xxxx" maxlength="4" required> -
-          <input type='cc' id='cc3' class='cc' name='cc' placeholder="xxxx" maxlength="4" required> -
-          <input type='cc' id='cc4' class='cc' name='cc' placeholder="xxxx" maxlength="4" required>
+          <input type='cc' id='cc1' class='cc' name='cc1' placeholder="xxxx" maxlength="4" required> -
+          <input type='cc' id='cc2' class='cc' name='cc2' placeholder="xxxx" maxlength="4" required> -
+          <input type='cc' id='cc3' class='cc' name='cc3' placeholder="xxxx" maxlength="4" required> -
+          <input type='cc' id='cc4' class='cc' name='cc4' placeholder="xxxx" maxlength="4" required>
           <span class='error-message'>Please enter a valid credit card.</span>
         </dd>
 
@@ -181,7 +185,13 @@
           return msg.style.opacity > 0;
         });
 
-        inputErrsFound ? p.style.opacity = 1 : p.style.opacity = 0;
+        if (inputErrsFound) {
+          p.style.opacity = 1;
+          return false;
+        } else {
+          p.style.opacity = 0;
+          return true;
+        }
       }
 
       function validateAllInputs() {
@@ -190,6 +200,47 @@
         inputArr.forEach(input => {
           validateInput(input);
         });
+      }
+
+      function formToObject(data) {
+        return Object.fromEntries(data.entries());
+      }
+
+      function generateURL(form) {
+        let data = new FormData(form);
+        let obj = formToObject(data);
+        obj.fullCC = obj.cc1 + obj.cc2 + obj.cc3 + obj.cc4;
+        delete obj.cc1;
+        delete obj.cc2;
+        delete obj.cc3;
+        delete obj.cc4;
+        let params = [];
+
+        Object.entries(obj).forEach(pair => {
+          let key = encodeURIComponent(`${pair[0]}`);
+          let value = encodeURIComponent(`${pair[1]}`);
+          params.push(`${key}=${value}`);
+        })
+        return params.join('\&');
+      }
+
+      function submitForm(form) {
+        let existingForm = document.querySelector('.submittedForm');
+        if (existingForm) existingForm.remove();
+
+        let div = document.createElement('div');
+        div.classList.add('submittedForm');
+
+        let h2 = document.createElement('h2');
+        h2.textContent = 'Serialized Form';
+
+        let p = document.createElement('p');
+        let params = generateURL(form);
+        p.textContent = params;
+
+        div.appendChild(h2);
+        div.appendChild(p);
+        form.appendChild(div);
       }
 
       let form = document.querySelector('form');
@@ -201,7 +252,8 @@
       form.addEventListener('submit', event => {
         event.preventDefault();
         validateAllInputs();
-        formErrMsgHandler();
+        let submittable = formErrMsgHandler();
+        if (submittable) submitForm(form);
       });
 
       form.addEventListener('keydown', event => {
