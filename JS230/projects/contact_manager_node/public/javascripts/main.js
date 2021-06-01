@@ -5,7 +5,15 @@ document.addEventListener('DOMContentLoaded', () => {
   let contactsTemplate = document.querySelector('#contactsTemplate');
   let contactsTemplateObj = Handlebars.compile(contactsTemplate.innerHTML);
 
+  let allContacts;
+
+  function clearContacts() {
+    let contactsContainer = document.querySelector('#contacts-container');
+    if (contactsContainer) contactsContainer.remove();
+  }
+
   function renderContacts(json) {
+    clearContacts();
     json.length > 0 ? hideContainer('noContacts') : showContainer('noContacts');
     let utilityContainer = document.querySelector('#utility-container');
     utilityContainer.insertAdjacentHTML('beforeend', contactsTemplateObj({contacts: json}));
@@ -15,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch('/api/contacts')
       .then(response => response.json())
       .then(json => {
+        allContacts = json;
         renderContacts(json);
       });
   }
@@ -173,13 +182,39 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  function filterAllContacts(string) {
+    let re = new RegExp(string, 'i');
+    return allContacts.filter(({full_name}) => {
+      return full_name.match(re);
+    });
+  }
+
+  function addListenersToSearch() {
+    let search = document.querySelector('#search');
+    search.addEventListener('keydown', event => {
+      if (event.key === 'Backspace' || event.key.length === 1) {
+        let text;
+
+        if (event.key.length === 1) {
+          text = search.value + event.key;
+        } else if (event.key === 'Backspace') {
+          text = search.value.slice(0, search.value.length - 1);
+        }
+
+        let matchingContacts = filterAllContacts(text);
+        renderContacts(matchingContacts);
+      }
+    })
+  }
+
   function initialize() {
     addListenersToAddBtns();
     addListenersToFormBtns();
     addListenersForEditAndDelete();
+    addListenersToSearch();
     getAllContacts();
   }
 
   initialize();
-  //TODO search, tagging, refactor into object creation pattern
+  //TODO tagging, refactor into object creation pattern
 });
