@@ -5,10 +5,58 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
+  <link rel='stylesheet' href='./stylesheets/index.css'>
   <script src="/javascripts/jquery.js"></script>
   <script src="/javascripts/handlebars.js"></script>
+  <script src="./javascripts/main.js"></script>
 </head>
 <body>
+  <div id='header-container'><header><p>Contact Manager</p></header></div>
+  <main>
+    <div id='main-container'>
+      <div id='primary-container' class='page'>
+        <div id='utility-container'>
+          <button id='addContact' class='btn addBtn'>Add Contact</button>
+          <input type='text' id='search' name='search' placeholder="Search">
+          
+        </div>
+        <div id='no-contacts-container'>
+          <h2>There are no contacts</h2>
+          <button id='addFirstContact' class='btn addBtn'>Add Contact</button>
+        </div>
+        
+      </div>
+      <div id='form-container' class='page'>
+        <h2>Create Contact</h2>
+        <form action='/api/contacts/' method='POST'>
+          <label for="full_name">Full name: <input type='text' id='full_name' class='form-input' name='full_name'></label>
+          <label for="email">Email address: <input type='text' id='email' class='form-input' name='email'></label>
+          <label for="phone_number">Telephone number: <input type='text' id='phone_number' class='form-input' name='phone_number'></label>
+          <label for="tags">Tags: <input type='text' id='tags' class='form-input' name='tags'></label>
+          <button id='submit' class='btn form-btn submitBtn'>Submit</button>
+          <button id='cancel' class='btn form-btn cancelBtn'>Cancel</button>
+        </form>
+      </div>
+    </div>
+  </main>
 
+  <script id='contactTemplate' type='application/x-handlebars'>
+    <div class='contact'>
+      <h2>{{full_name}}</h2>
+      <p>Phone Number: {{phone_number}}</p>
+      <p>Email: {{email}}</p>
+      <p>Tags: {{tags}}</p>
+      <button data-id={{id}} class='btn template-btn editBtn'>Edit</button>
+      <button data-id={{id}} class='btn template-btn deleteBtn'>Delete</button>
+    </div>
+  </script>
+  
+  <script id='contactsTemplate' type='application/x-handlebars'>
+    <div id='contacts-container'>
+      {{#each contacts}}
+      {{> contact}}
+      {{/each}}
+    </div>
+  </script>
 </body>
 </html>

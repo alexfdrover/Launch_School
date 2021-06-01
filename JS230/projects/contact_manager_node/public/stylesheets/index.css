@@ -1,0 +1,104 @@
+html {
+  font-family: sans-serif;
+}
+
+#no-contacts-container {
+  margin-top: 20px;
+}
+
+.contact {
+  display: inline-block;
+  margin-right: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid grey;
+  width: 200px;
+}
+
+#contacts-container {
+  padding-top: 20px;
+  background-color: white;
+  text-align: left;
+}
+
+button {
+  color: purple;
+  margin: 0;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 10px 15px;
+  border: 1px solid purple;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+label {
+  display: block;
+}
+
+#header-container {
+  width: 100%;
+  background-color: purple;
+  color: white;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+header {
+  width: 50%;
+  margin: auto;
+  font-size: 32px;
+  text-align: center;
+}
+
+#primary-container, #no-contacts-container {
+  width: 50%;
+  margin: auto;
+  padding-bottom: 20px;
+  text-align: center;
+}
+
+#utility-container, #no-contacts-container {
+  background-color: rgb(200, 200, 200);
+}
+
+#no-contacts-container > h2 {
+  padding-top: 20px;
+}
+
+#form-container {
+  width: 48%;
+  margin: auto;
+  display: none;
+}
+
+#form-container > h2 {
+  text-align: center;
+}
+
+form {
+  width: 100%;
+  border: none;
+  text-align: right;
+  font-weight: bold;
+}
+
+.form-input {
+  border: 1px solid rgb(200, 200, 200);
+  border-radius: 4px;
+  width: 70%;
+  margin-bottom: 15px;
+  margin-left: 20px;
+  height: 25px;
+}
+
+.form-btn {
+  display: inline-block;
+  width: 35%;
+  background-color: white;
+}
+
+button:hover {
+  color: white;
+  background-color: purple;
+}
+
