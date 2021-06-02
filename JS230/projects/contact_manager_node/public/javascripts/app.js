@@ -286,6 +286,7 @@ class AddressBookCtrl {
         this.saveContact(form);
         this.addressBookView.resetForm();
         form.reset();
+        this.updateListOfPossibleTags();
       }
     });    
   }
@@ -409,7 +410,9 @@ class AddressBookCtrl {
 
   updateListOfPossibleTags() {
     let tags = this.addressBookModel.getTags();
-    this.addressBookView.refreshListOfTags(tags);
+    setTimeout(() => {
+      this.addressBookView.refreshListOfTags(tags);
+    }, 150);
   }
 
   filterAllContacts(string, searchByName=true) {
