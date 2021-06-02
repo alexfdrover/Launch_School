@@ -213,6 +213,7 @@ class AddressBookView {
   }
 
   refreshListOfTags(tags) {
+    
     tags = tags.map(tag => {
       return {
         tag: tag
@@ -223,9 +224,11 @@ class AddressBookView {
     for (let j = 0; j < tagSelectLists.length; j += 1) {
       let tagSelect = tagSelectLists[j];
       let children = tagSelect.children;
-      for (let i = 0; i < children.length; i += 1) {
-        children[i].remove();
+      
+      while (children.length > 0) {
+        children[0].remove();
       }
+      
       tagSelect.insertAdjacentHTML('afterbegin', this.optionsTemplateObj({tags: tags}));
     }
   }
