@@ -377,8 +377,6 @@ class AddressBookCtrl {
     for (let entry of formData.entries()) {
       obj[entry[0]] = entry[1];
     }
-    
-    console.log(obj);
     return obj;
   }
 
