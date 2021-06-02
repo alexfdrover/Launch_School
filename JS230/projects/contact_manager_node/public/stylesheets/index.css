@@ -65,13 +65,13 @@ header {
   padding-top: 20px;
 }
 
-#form-container {
+#form-container, #tag-container {
   width: 48%;
   margin: auto;
   display: none;
 }
 
-#form-container > h2 {
+#form-container > h2, #tag-container > h2 {
   text-align: center;
 }
 

@@ -1,6 +1,7 @@
 class AddressBookModel {
   constructor() {
     this.allContacts;
+    this.tags;
   }
 
   init() {
@@ -32,10 +33,33 @@ class AddressBookModel {
       });
   }
 
+  updateTags() {
+    let allTags = [];
+    this.allContacts.forEach(({tags}) => {
+      if (tags) {
+        let tagList = tags.split(',');
+        tagList.forEach(tag => {
+          tag = tag.trim();
+          if (!allTags.includes(tag)) allTags.push(tag);
+        });
+      }
+    });
+
+    this.tags = allTags;
+  }
+
+  addTag(tag) {
+    tag = tag.trim();
+    if (!this.tags.includes(tag)) this.tags.push(tag);
+  }
+
   readAllContacts() {
     fetch('/api/contacts')
     .then(response => response.json())
-    .then(json => this.allContacts = json);
+    .then(json => {
+      this.allContacts = json;
+      this.updateTags();
+    });
   }
 
   updateContact(id, body) {
@@ -65,6 +89,10 @@ class AddressBookModel {
 
   getContacts() {
     return this.allContacts;
+  }
+
+  getTags() {
+    return this.tags;
   }
 }
 
@@ -133,6 +161,9 @@ class AddressBookView {
       case 'noContacts':
         target = document.querySelector('#no-contacts-container');
         break;
+      case 'tag':
+        target = document.querySelector('#tag-container');
+        break;
       default:
         break;
     }
@@ -151,6 +182,9 @@ class AddressBookView {
         break;
       case 'noContacts':
         target = document.querySelector('#no-contacts-container');
+        break;
+      case 'tag':
+        target = document.querySelector('#tag-container');
         break;
       default:
         break;
@@ -192,6 +226,8 @@ class AddressBookCtrl {
     this.addListenerToEditBtn();
     this.addListenerToDeleteBtn();
     this.addListenerToSearch();
+    this.addListenerToAddTag();
+    this.addListenerToTagForm();
   }
 
   addListenersToAddBtns() {
@@ -267,6 +303,41 @@ class AddressBookCtrl {
         this.addressBookView.renderContacts(matchingContacts);
       }
     });
+  }
+
+  addListenerToAddTag() {
+    let primaryContainer = document.querySelector('#primary-container');
+    primaryContainer.addEventListener('click', event => {
+      event.preventDefault();
+      if (event.target.classList.contains('addTagBtn')) {
+        this.addressBookView.hideContainer('primary');
+        this.addressBookView.showContainer('tag');
+      }
+    });
+  }
+
+  addListenerToTagForm() {
+    let form = document.querySelector('#tag-form');
+    let submitBtn = document.querySelector('#submitTag');
+    let cancelBtn = document.querySelector('#cancelTag');
+
+    form.addEventListener('click', event => {
+      event.preventDefault();
+      if (event.target === submitBtn) {
+        this.saveTag(form);
+        form.reset();
+      } else if (event.target === cancelBtn) {
+        this.addressBookView.hideContainer('tag');
+        this.addressBookView.showContainer('primary');
+      }
+    }); 
+  }
+
+  saveTag(form) {
+    let tag = form.elements.tag_name.value;
+    if (tag) {
+      this.addressBookModel.addTag(tag);
+    }
   }
 
   filterAllContacts(string) {

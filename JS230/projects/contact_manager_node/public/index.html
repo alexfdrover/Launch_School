@@ -17,6 +17,7 @@
       <div id='primary-container' class='page'>
         <div id='utility-container'>
           <button id='addContact' class='btn addBtn'>Add Contact</button>
+          <button id='addTag' class='btn addTagBtn'>Add Tag</button>
           <input type='text' id='search' name='search' placeholder="Search">
           
         </div>
@@ -35,6 +36,15 @@
           <label for="tags">Tags: <input type='text' id='tags' class='form-input' name='tags'></label>
           <button id='submit' class='btn form-btn submitBtn'>Submit</button>
           <button id='cancel' class='btn form-btn cancelBtn'>Cancel</button>
+        </form>
+      </div>
+
+      <div id='tag-container' class='page'>
+        <h2>Create Tag</h2>
+        <form id='tag-form' action='' method=''>
+          <label for="tag_name">Tag name: <input type='text' id='tag_name' class='form-input' name='tag_name'></label>
+          <button id='submitTag' class='btn form-btn submitTagBtn'>Submit</button>
+          <button id='cancelTag' class='btn form-btn cancelTagBtn'>Cancel</button>
         </form>
       </div>
     </div>
