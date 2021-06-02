@@ -388,9 +388,12 @@ class AddressBookCtrl {
   addListenerToTagSearch() {
     let tagSearchContainer = document.querySelector('#tag-search-container');
     tagSearchContainer.addEventListener('change', event => {
-      if (event.target.tagName === 'SELECT') {
+      if (event.target.tagName === 'SELECT' && event.target.value) {
         let tag = event.target.value;
         let matchingContacts = this.filterAllContacts(tag, false);
+        this.addressBookView.renderContacts(matchingContacts);
+      } else if (event.target.tagName === 'SELECT') {
+        let matchingContacts = this.filterAllContacts('', true);
         this.addressBookView.renderContacts(matchingContacts);
       }
     });
