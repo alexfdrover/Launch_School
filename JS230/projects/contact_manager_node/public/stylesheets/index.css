@@ -102,3 +102,12 @@ button:hover {
   background-color: purple;
 }
 
+#tag-search-container {
+  background-color: rgb(239, 239, 239);
+  color: purple;
+  width: 50%;
+  margin: auto;
+  border: 2px solid purple;
+  border-radius: 4px;
+  margin-bottom: 5px;
+}
