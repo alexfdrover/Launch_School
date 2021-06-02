@@ -352,6 +352,7 @@ class AddressBookCtrl {
         if (!currentTags.includes(tag) && tag) {
           currentTags.push(tag);
         }
+        if (currentTags[0] === '') currentTags = currentTags.slice(1);
         tagInput.setAttribute('value', currentTags.join(', '));
       }
     })
