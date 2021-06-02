@@ -25,7 +25,7 @@
           <button id='addFirstContact' class='btn addBtn'>Add Contact</button>
         </div>
       </div>
-      
+
       <div id='form-container' class='page'>
         <h2>Create Contact</h2>
         <form id='add-form' action='/api/contacts/' method='POST'>
@@ -35,8 +35,6 @@
           <label for="tags">Tags: <input type='text' id='tags' class='form-input' name='tags'></label>
           <div id='tag-select-container'>
             <select id='tagSelect'>
-              <option value='' selected>Select Tags</option>
-              <option value='test'>test</option>
             </select>
           </div>
           <button id='submit' class='btn form-btn submitBtn'>Submit</button>
@@ -72,6 +70,17 @@
       {{> contact}}
       {{/each}}
     </div>
+  </script>
+
+  <script id='optionTemplate' type='application/x-handlers'>
+    <option value='{{tag}}'>{{tag}}</option>
+  </script>
+  
+  <script id='optionsTemplate' type='application/x-handlers'>
+    <option value='' selected>Select Tags</option>
+    {{#each tags}}
+    {{> option}}
+    {{/each}}
   </script>
 </body>
 </html>

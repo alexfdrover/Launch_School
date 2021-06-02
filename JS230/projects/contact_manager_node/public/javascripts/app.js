@@ -101,8 +101,16 @@ class AddressBookView {
     let contactTemplate = document.querySelector('#contactTemplate');
     this.contactTemplateObj = Handlebars.compile(contactTemplate.innerHTML);
     Handlebars.registerPartial('contact', contactTemplate.innerHTML);
+
     let contactsTemplate = document.querySelector('#contactsTemplate');
     this.contactsTemplateObj = Handlebars.compile(contactsTemplate.innerHTML);
+
+    let optionTemplate = document.querySelector('#optionTemplate');
+    this.optionTemplateObj = Handlebars.compile(optionTemplate.innerHTML);
+    Handlebars.registerPartial('option', optionTemplate.innerHTML);
+
+    let optionsTemplate = document.querySelector('#optionsTemplate');
+    this.optionsTemplateObj = Handlebars.compile(optionsTemplate.innerHTML);
   }
 
   init(contacts) {
@@ -203,6 +211,20 @@ class AddressBookView {
       }
     }
   }
+
+  refreshListOfTags(tags) {
+    let tagSelect = document.querySelector('#tagSelect');
+    let children = tagSelect.children;
+    for (let i = 0; i < children.length; i += 1) {
+      children[i].remove();
+    }
+    tags = tags.map(tag => {
+      return {
+        tag: tag
+      }
+    });
+    tagSelect.insertAdjacentHTML('afterbegin', this.optionsTemplateObj({tags: tags}));
+  }
 }
 
 class AddressBookCtrl {
@@ -216,6 +238,7 @@ class AddressBookCtrl {
     setTimeout(() => {
       let contacts = this.getContacts();
       this.addressBookView.init(contacts);
+      this.updateListOfPossibleTags();
     }, 50);
     this.addAllListeners();
   }
@@ -362,7 +385,13 @@ class AddressBookCtrl {
     let tag = form.elements.tag_name.value;
     if (tag) {
       this.addressBookModel.addTag(tag);
+      this.updateListOfPossibleTags();
     }
+  }
+
+  updateListOfPossibleTags() {
+    let tags = this.addressBookModel.getTags();
+    this.addressBookView.refreshListOfTags(tags);
   }
 
   filterAllContacts(string) {
