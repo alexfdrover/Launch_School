@@ -330,7 +330,6 @@ class AddressBookCtrl {
         } else if (key === 'Backspace') {
           text = search.value.slice(0, search.value.length - 1);
         }
-        console.log(text);
         let matchingContacts = this.filterAllContacts(text);
         this.addressBookView.renderContacts(matchingContacts);
       }
@@ -389,9 +388,10 @@ class AddressBookCtrl {
   addListenerToTagSearch() {
     let tagSearchContainer = document.querySelector('#tag-search-container');
     tagSearchContainer.addEventListener('change', event => {
-      if (event.target.tagName === 'OPTION') {
+      if (event.target.tagName === 'SELECT') {
         let tag = event.target.value;
-        this.filterAllContacts(tag, false);
+        let matchingContacts = this.filterAllContacts(tag, false);
+        this.addressBookView.renderContacts(matchingContacts);
       }
     });
   }
@@ -418,7 +418,7 @@ class AddressBookCtrl {
       });
     } else {
       return allContacts.filter(({tags}) => {
-        return tags.match(re);
+        if (tags) return tags.match(re);
       });
     }
   }
