@@ -228,6 +228,7 @@ class AddressBookCtrl {
     this.addListenerToSearch();
     this.addListenerToAddTag();
     this.addListenerToTagForm();
+    this.addListenerToTagSelect();
   }
 
   addListenersToAddBtns() {
@@ -252,9 +253,11 @@ class AddressBookCtrl {
       if (event.target === cancelBtn) {
         this.addressBookView.hideContainer('form');
         this.addressBookView.showContainer('primary');
+        form.reset();
       } else if (event.target === submitBtn) {
         this.saveContact(form);
         this.addressBookView.resetForm();
+        form.reset();
       }
     });    
   }
@@ -330,8 +333,28 @@ class AddressBookCtrl {
       } else if (event.target === cancelBtn) {
         this.addressBookView.hideContainer('tag');
         this.addressBookView.showContainer('primary');
+        form.reset();
       }
     }); 
+  }
+
+  addListenerToTagSelect() {
+    let tagSelectContainer = document.querySelector('#tag-select-container');
+    let tagInput = document.querySelector('#tags');
+    tagSelectContainer.addEventListener('change', event => {
+      if (event.target.tagName === 'SELECT') {
+        let tag = event.target.value;
+        let currentTags = tagInput.getAttribute('value')
+                             .split(',')
+                             .map(value => {
+                               return value.trim();
+                             });
+        if (!currentTags.includes(tag) && tag) {
+          currentTags.push(tag);
+        }
+        tagInput.setAttribute('value', currentTags.join(', '));
+      }
+    })
   }
 
   saveTag(form) {
@@ -354,6 +377,7 @@ class AddressBookCtrl {
       obj[entry[0]] = entry[1];
     }
     
+    console.log(obj);
     return obj;
   }
 
