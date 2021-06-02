@@ -95,7 +95,6 @@ class AddressBookView {
 
   addContactToPage(contact) {
     document.querySelector('#contacts-container').insertAdjacentHTML('beforeend', this.contactTemplateObj(contact));
-    this.resetForm();
   }
 
   replaceContactOnPage(contact) {
@@ -103,7 +102,6 @@ class AddressBookView {
     let oldElement = document.querySelector(`[data-id="${id}"]`).closest('div');
     oldElement.insertAdjacentHTML('afterend', this.contactTemplateObj(contact));
     oldElement.remove();
-    this.resetForm();
   }
 
   removeContactFromPage(node) {
@@ -111,10 +109,16 @@ class AddressBookView {
   }
 
   resetForm() {
-    let form = document.querySelector('form');
+    let form = document.querySelector('#add-form');
     form.setAttribute('action', '/api/contacts/');
     form.setAttribute('method', 'POST');
     form.setAttribute('data-id', '');
+    let elements = form.elements;
+    for (let i = 0; i < elements.length; i += 1) {
+      if (elements[i].tagName !== 'BUTTON') {
+        elements[i].value = '';
+      }
+    }
   }
 
   hideContainer(container) {
@@ -156,7 +160,7 @@ class AddressBookView {
   }
 
   populateForm(json) {
-    let form = document.querySelector('form');
+    let form = document.querySelector('#add-form');
     this.hideContainer('primary');
     this.showContainer('form');
     for (let prop in json) {
@@ -202,9 +206,9 @@ class AddressBookCtrl {
   }
 
   addListenersToFormBtns() {
-    let form = document.querySelector('form');
-    let cancelBtn = document.querySelector('.cancelBtn');
-    let submitBtn = document.querySelector('.submitBtn');
+    let form = document.querySelector('#add-form');
+    let cancelBtn = document.querySelector('#cancel');
+    let submitBtn = document.querySelector('#submit');
 
     form.addEventListener('click', event => {
       event.preventDefault();
@@ -213,13 +217,14 @@ class AddressBookCtrl {
         this.addressBookView.showContainer('primary');
       } else if (event.target === submitBtn) {
         this.saveContact(form);
+        this.addressBookView.resetForm();
       }
     });    
   }
 
   addListenerToEditBtn() {
     let primaryContainer = document.querySelector('#primary-container');
-    let form = document.querySelector('form');
+    let form = document.querySelector('#add-form');
 
     primaryContainer.addEventListener('click', event => {
       if (event.target.classList.contains('editBtn')) {
