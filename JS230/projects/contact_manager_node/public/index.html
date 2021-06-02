@@ -19,6 +19,11 @@
           <button id='addContact' class='btn addBtn'>Add Contact</button>
           <button id='addTag' class='btn addTagBtn'>Add Tag</button>
           <input type='text' id='search' name='search' placeholder="Search">
+          <div id='tag-search-container'>
+            <label for='tagSearch'>Search Contacts by Tag</label>
+            <select id='tagSearch' name='tagSearch' class='tag-select-list'>
+            </select>
+          </div>
         </div>
         <div id='no-contacts-container'>
           <h2>There are no contacts</h2>
@@ -34,7 +39,7 @@
           <label for="phone_number">Telephone number: <input type='text' id='phone_number' class='form-input' name='phone_number'></label>
           <label for="tags">Tags: <input type='text' id='tags' class='form-input' name='tags'></label>
           <div id='tag-select-container'>
-            <select id='tagSelect'>
+            <select id='tagSelect' class='tag-select-list'>
             </select>
           </div>
           <button id='submit' class='btn form-btn submitBtn'>Submit</button>

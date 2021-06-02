@@ -213,17 +213,21 @@ class AddressBookView {
   }
 
   refreshListOfTags(tags) {
-    let tagSelect = document.querySelector('#tagSelect');
-    let children = tagSelect.children;
-    for (let i = 0; i < children.length; i += 1) {
-      children[i].remove();
-    }
     tags = tags.map(tag => {
       return {
         tag: tag
       }
     });
-    tagSelect.insertAdjacentHTML('afterbegin', this.optionsTemplateObj({tags: tags}));
+
+    let tagSelectLists = document.querySelectorAll('.tag-select-list');
+    for (let j = 0; j < tagSelectLists.length; j += 1) {
+      let tagSelect = tagSelectLists[j];
+      let children = tagSelect.children;
+      for (let i = 0; i < children.length; i += 1) {
+        children[i].remove();
+      }
+      tagSelect.insertAdjacentHTML('afterbegin', this.optionsTemplateObj({tags: tags}));
+    }
   }
 }
 
@@ -252,6 +256,7 @@ class AddressBookCtrl {
     this.addListenerToAddTag();
     this.addListenerToTagForm();
     this.addListenerToTagSelect();
+    this.addListenerToTagSearch();
   }
 
   addListenersToAddBtns() {
@@ -381,6 +386,16 @@ class AddressBookCtrl {
     })
   }
 
+  addListenerToTagSearch() {
+    let tagSearchContainer = document.querySelector('#tag-search-container');
+    tagSearchContainer.addEventListener('change', event => {
+      if (event.target.tagName === 'OPTION') {
+        let tag = event.target.value;
+        this.filterAllContacts(tag, false);
+      }
+    });
+  }
+
   saveTag(form) {
     let tag = form.elements.tag_name.value;
     if (tag) {
@@ -394,11 +409,18 @@ class AddressBookCtrl {
     this.addressBookView.refreshListOfTags(tags);
   }
 
-  filterAllContacts(string) {
+  filterAllContacts(string, searchByName=true) {
     let re = new RegExp(string, 'i');
-    return this.getContacts().filter(({full_name}) => {
-      return full_name.match(re);
-    });
+    let allContacts = this.getContacts();
+    if (searchByName) {
+      return allContacts.filter(({full_name}) => {
+        return full_name.match(re);
+      });
+    } else {
+      return allContacts.filter(({tags}) => {
+        return tags.match(re);
+      });
+    }
   }
 
   formDataToJson(formData) {
