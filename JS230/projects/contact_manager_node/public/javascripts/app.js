@@ -1,7 +1,7 @@
 class AddressBookModel {
   constructor() {
     this.allContacts;
-    this.tags;
+    this.tags = [];
   }
 
   init() {
@@ -34,7 +34,7 @@ class AddressBookModel {
   }
 
   updateTags() {
-    let allTags = [];
+    let allTags = this.tags;
     this.allContacts.forEach(({tags}) => {
       if (tags) {
         let tagList = tags.split(',');
@@ -142,11 +142,11 @@ class AddressBookView {
     form.setAttribute('method', 'POST');
     form.setAttribute('data-id', '');
     let elements = form.elements;
-    for (let i = 0; i < elements.length; i += 1) {
-      if (elements[i].tagName !== 'BUTTON') {
-        elements[i].value = '';
-      }
-    }
+        for (let i = 0; i < elements.length; i += 1) {
+          if (elements[i].tagName !== 'BUTTON') {
+            elements[i].setAttribute('value', '');
+          }
+        }
   }
 
   hideContainer(container) {
@@ -235,6 +235,7 @@ class AddressBookCtrl {
     primaryContainer.addEventListener('click', event => {
       event.preventDefault();
       if (event.target.classList.contains('addBtn')) {
+        this.addressBookView.resetForm();
         this.addressBookView.hideContainer('primary');
         this.addressBookView.showContainer('form');
       }
